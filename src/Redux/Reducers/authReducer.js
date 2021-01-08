@@ -1,15 +1,15 @@
-import {INCREMENT} from '../Actions/authAction';
+import {IS_AUTHENTICATED} from '../Actions/authAction';
 
 const initialState = {
-  test: 0,
+  isAuthenticated: null,
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case INCREMENT: {
+    case IS_AUTHENTICATED: {
       return {
         ...state,
-        test: state.test + 1,
+        isAuthenticated: action.payload,
       };
     }
     default:

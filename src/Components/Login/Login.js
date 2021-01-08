@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {incrementAction} from '../../Actions/authAction';
+import {isAuthenticatedAction} from '../../Redux/Actions/authAction';
 import {utilStyles} from '../../utils/styles';
 
-const Login = ({auth, navigation, incrementAction}) => {
+const Login = ({auth, navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -31,10 +31,7 @@ const Login = ({auth, navigation, incrementAction}) => {
         placeholder="Enter password"
         style={utilStyles.input}
       />
-      <TouchableOpacity
-        activeOpacity={0.75}
-        onPress={() => incrementAction()}
-        style={utilStyles.button1}>
+      <TouchableOpacity activeOpacity={0.75} style={utilStyles.button1}>
         <Text style={{fontSize: 17, color: '#FFF'}}>Login</Text>
       </TouchableOpacity>
       <Pressable
@@ -51,7 +48,7 @@ const mapStateToProps = ({auth}) => ({auth});
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      incrementAction,
+      isAuthenticatedAction,
     },
     dispatch,
   );
