@@ -62,16 +62,16 @@ const Login = ({auth, navigation, userLoginDispatch}) => {
             <Text style={styles.header}>Login</Text>
             <TextInput
               value={email}
+              style={utilStyles.input}
               onChangeText={(text) => setEmail(text)}
               placeholder="Enter email"
-              style={utilStyles.input}
             />
             <TextInput
               value={password}
+              style={utilStyles.input}
               secureTextEntry
               onChangeText={(text) => setPassword(text)}
               placeholder="Enter password"
-              style={utilStyles.input}
             />
             <TouchableOpacity
               // onPress={() => onSubmit()}
