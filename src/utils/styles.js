@@ -12,7 +12,7 @@ export const utilStyles = StyleSheet.create({
     borderRadius: 7,
   },
   button1: {
-    backgroundColor: '#000',
+    backgroundColor: '#08121C',
     width: '70%',
     alignItems: 'center',
     alignSelf: 'center',
