@@ -52,14 +52,14 @@ const Register = ({navigation}) => {
             <Text style={styles.header}>Register Your Shop!</Text>
             <TextInput
               value={email}
+              style={utilStyles.input}
               onChangeText={(text) => setEmail(text)}
               placeholder="Enter email"
-              style={utilStyles.input}
             />
             <TextInput
               value={password}
-              style={utilStyles.input}
               onChangeText={(text) => setPassword(text)}
+              style={utilStyles.input}
               placeholder="Enter password"
             />
             <TextInput
@@ -70,9 +70,9 @@ const Register = ({navigation}) => {
             />
             <TextInput
               value={number}
-              style={utilStyles.input}
               onChangeText={(text) => setNumber(text)}
               keyboardType="number-pad"
+              style={utilStyles.input}
               maxLength={10}
               placeholder="Enter your mobile number"
             />
