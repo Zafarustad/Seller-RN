@@ -51,8 +51,7 @@ const Login = ({auth, navigation, userLoginDispatch}) => {
             duration={600}
             useNativeDriver
             style={{
-              height: height * 0.75,
-              // flex: 1,
+              height: height * 0.7,
               backgroundColor: '#FFF',
               paddingTop: 80,
               marginTop: 50,
