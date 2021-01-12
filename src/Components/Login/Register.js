@@ -58,23 +58,23 @@ const Register = ({navigation}) => {
             />
             <TextInput
               value={password}
+              style={utilStyles.input}
               onChangeText={(text) => setPassword(text)}
               placeholder="Enter password"
-              style={utilStyles.input}
             />
             <TextInput
               value={ownerName}
+              style={utilStyles.input}
               onChangeText={(text) => setOwnerName(text)}
               placeholder="Enter shop owner name"
-              style={utilStyles.input}
             />
             <TextInput
               value={number}
+              style={utilStyles.input}
               onChangeText={(text) => setNumber(text)}
               keyboardType="number-pad"
               maxLength={10}
               placeholder="Enter your mobile number"
-              style={utilStyles.input}
             />
             <TouchableOpacity activeOpacity={0.75} style={utilStyles.button1}>
               <Text style={{fontSize: 17, color: '#FFF'}}>Submit</Text>
