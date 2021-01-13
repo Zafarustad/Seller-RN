@@ -1,7 +1,10 @@
 import React, {useEffect} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from '@react-navigation/stack';
 import Login from '../Components/Login/Login';
 import Register from '../Components/Login/Register';
 import Splash from '../Components/Splash';
@@ -40,7 +43,13 @@ const Routes = ({auth}) => {
   ) : isAuthenticated === false ? (
     <LoginStack.Navigator initialRouteName="Login" headerMode="none">
       <LoginStack.Screen name="Login" component={Login} />
-      <LoginStack.Screen name="Register" component={Register} />
+      <LoginStack.Screen
+        name="Register"
+        component={Register}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
+      />
     </LoginStack.Navigator>
   ) : isAuthenticated ? (
     <HomeStack.Navigator initialRouteName="Home" headerMode="none">
