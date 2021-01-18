@@ -1,7 +1,13 @@
-import {IS_AUTHENTICATED} from '../Actions/authAction';
+import {
+  IS_AUTHENTICATED,
+  SET_ERRORS,
+  AUTH_LOADING,
+} from '../Actions/authAction';
 
 const initialState = {
   isAuthenticated: null,
+  errors: null,
+  authLoading: false,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -10,6 +16,18 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         isAuthenticated: action.payload,
+      };
+    }
+    case SET_ERRORS: {
+      return {
+        ...state,
+        errors: action.payload,
+      };
+    }
+    case AUTH_LOADING: {
+      return {
+        ...state,
+        authLoading: action.payload,
       };
     }
     default:
