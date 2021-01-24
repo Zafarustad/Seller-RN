@@ -4,11 +4,11 @@ export const utilStyles = StyleSheet.create({
   input: {
     width: '85%',
     alignSelf: 'center',
-    padding: 12,
-    backgroundColor: "#FFF",
+    padding: 15,
     fontSize: 16,
     borderRadius: 10,
-    elevation: 7,
+    borderColor: '#000000',
+    borderWidth: 0.5,
   },
   button1: {
     backgroundColor: '#08121C',

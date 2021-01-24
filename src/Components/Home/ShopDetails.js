@@ -21,20 +21,21 @@ import * as Animatable from 'react-native-animatable';
 import {MyTextInput} from '../../utils/myElements';
 import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/EvilIcons';
 
-const {height, width} = Dimensions.get('screen');
+const {height, width} = Dimensions.get('window');
 
-const Register = ({
+const ShopDetails = ({
   navigation,
   auth,
   userRegisterDispatch,
   authLoadingAction,
 }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [shopOwnerName, setOwnerName] = useState('');
-  const [number, setNumber] = useState('');
+  const [shopName, setShopName] = useState('');
+  const [category, setCategory] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [pincode, setPincode] = useState('');
+  const [gstin, setGstin] = useState('');
 
   const {errors, authLoading} = auth;
 
@@ -44,75 +45,67 @@ const Register = ({
 
   const onSubmit = () => {
     const data = {
-      email,
-      password,
-      shopOwnerName,
-      number,
+      shopName,
+      category,
+      address,
+      city,
+      pincode,
+      gstin,
     };
     authLoadingAction(true);
-    userRegisterDispatch(data);
   };
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView enabled style={{flexGrow: 1, height: '100%'}}>
-        <ScrollView keyboardShouldPersistTaps="always">
+      <ScrollView bounces keyboardShouldPersistTaps="always">
+        <KeyboardAvoidingView>
           <Animatable.View
-            animation="fadeIn"
-            duration={1500}
-            useNativeDriver
-            style={styles.header}>
-            <Text style={{fontSize: 25, color: '#AAAAAA'}}>Sign Up</Text>
-            <Text style={{fontSize: 30, color: '#FFFFFF'}}>
-              Register Your Shop!
-            </Text>
-          </Animatable.View>
-          <Animatable.View
-            animation="fadeInUpBig"
-            duration={600}
+            animation="slideInLeft"
+            duration={700}
             useNativeDriver>
             <LinearGradient
               locations={[0.3, 0.9, 1]}
               colors={['#FFFFFF', '#C4C4C4', '#A4A49C']}
               style={styles.contentWrapper}>
-              <Pressable
-                onPress={() => navigation.navigate('Login')}
-                style={styles.navigationCont}>
-                <Icon name="chevron-left" color="#000" size={30} />
-                <Text style={{fontSize: 14}}>Create an Account</Text>
-              </Pressable>
+              <Text style={styles.header}>Enter Your Shop Details</Text>
               <MyTextInput
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                placeholder="Enter Email"
-                error={errors && errors.email ? errors.email : null}
+                value={shopName}
+                onChangeText={(text) => setShopName(text)}
+                placeholder="Enter Shop Name"
               />
               <MyTextInput
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                placeholder="Enter Password"
+                value={category}
+                onChangeText={(text) => setCategory(text)}
+                placeholder="Pick Shop Category"
                 secureTextEntry
-                error={errors && errors.password ? errors.password : null}
               />
               <MyTextInput
-                value={shopOwnerName}
-                onChangeText={(text) => setOwnerName(text)}
-                placeholder="Enter shop owner name"
-                error={
-                  errors && errors.shopOwnerName ? errors.shopOwnerName : null
-                }
+                value={address}
+                onChangeText={(text) => setAddress(text)}
+                placeholder="Enter Your Shop Address"
+                multiline={true}
               />
               <MyTextInput
-                value={number}
-                onChangeText={(text) => setNumber(text)}
+                value={city}
+                onChangeText={(text) => setCity(text)}
+                placeholder="Enter City"
+              />
+              <MyTextInput
+                value={pincode}
+                maxLength={5}
                 keyboardType="number-pad"
-                maxLength={10}
-                placeholder="Enter your mobile number"
-                error={errors && errors.number ? errors.number : null}
+                onChangeText={(text) => setPincode(text)}
+                placeholder="Enter Area Pincode"
+              />
+              <MyTextInput
+                value={gstin}
+                maxLength={15}
+                onChangeText={(text) => setGstin(text)}
+                placeholder="GSTIN"
               />
               {!authLoading ? (
                 <TouchableOpacity
-                  onPress={() => onSubmit()}
+                  //   onPress={() => onSubmit()}
                   activeOpacity={0.75}
                   style={utilStyles.button1}>
                   <Text style={{fontSize: 17, color: '#FFF'}}>Submit</Text>
@@ -127,8 +120,8 @@ const Register = ({
               )}
             </LinearGradient>
           </Animatable.View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </ScrollView>
     </View>
   );
 };
@@ -145,27 +138,24 @@ const mapDispatchToProps = (dispatch) =>
     dispatch,
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(mapStateToProps, mapDispatchToProps)(ShopDetails);
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#08121C',
     flex: 1,
+    backgroundColor: '#08121C',
+    alignItems: 'center',
   },
   header: {
-    marginTop: 40,
+    marginVertical: 45,
     marginLeft: 15,
+    fontSize: 23,
+    textAlign: 'center',
   },
   contentWrapper: {
-    height: height * 0.8,
-    width: width * 0.99,
+    height: height,
+    width: width,
     backgroundColor: '#FFF',
-    flex: 1,
-    justifyContent: 'center',
-    marginTop: 50,
-    borderTopRightRadius: 25,
-    borderTopLeftRadius: 25,
-    marginHorizontal: 5,
   },
   navigationCont: {
     position: 'absolute',

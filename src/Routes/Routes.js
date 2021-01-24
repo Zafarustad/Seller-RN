@@ -10,6 +10,8 @@ import Register from '../Components/Login/Register';
 import Splash from '../Components/Splash';
 import Home from '../Components/Home/Home';
 import SInfo from 'react-native-sensitive-info';
+import ShopDetails from '../Components/Home/ShopDetails';
+import GoogleMap from '../Components/Home/GoogleMap';
 
 const AuthStack = createStackNavigator();
 const LoginStack = createStackNavigator();
@@ -43,6 +45,14 @@ const Routes = ({auth}) => {
   ) : isAuthenticated === false ? (
     <LoginStack.Navigator initialRouteName="Login" headerMode="none">
       <LoginStack.Screen name="Login" component={Login} />
+      <LoginStack.Screen name="ShopDetails" component={ShopDetails} />
+      <LoginStack.Screen
+        name="GoogleMap"
+        component={GoogleMap}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
+      />
       <LoginStack.Screen
         name="Register"
         component={Register}

@@ -21,10 +21,12 @@
     "react-native-animated-nav-tab-bar": "^3.0.5",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-linear-gradient": "^2.5.6",
+    "react-native-maps": "0.27.1",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.16.1",
     "react-native-sensitive-info": "^6.0.0-alpha.9",
+    "react-native-vector-icons": "^7.1.0",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"

@@ -21,8 +21,9 @@ import {utilStyles} from '../../utils/styles';
 import {MyTextInput} from '../../utils/myElements';
 import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/EvilIcons';
 
-const height = Dimensions.get('window').height;
+const {height, width} = Dimensions.get('screen');
 
 const Login = ({
   auth,
@@ -51,23 +52,32 @@ const Login = ({
 
   return (
     <View style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps="always">
-        <KeyboardAvoidingView>
+      <KeyboardAvoidingView enabled style={{flexGrow: 1, height: '100%'}}>
+        <ScrollView keyboardShouldPersistTaps="always">
           <Animatable.View
-            animation="bounceIn"
-            duration={900}
+            animation="fadeIn"
+            duration={1500}
             useNativeDriver
-            style={styles.logo}
-          />
+            style={styles.header}>
+            <Text style={{fontSize: 25, color: '#AAAAAA'}}>Login</Text>
+            <Text style={{fontSize: 30, color: '#FFFFFF'}}>
+              Welcome to Something!
+            </Text>
+          </Animatable.View>
           <Animatable.View
             animation="fadeInUpBig"
             duration={600}
             useNativeDriver>
             <LinearGradient
-              locations={[0.3, 0.8, 1]}
+              locations={[0.3, 0.9, 1]}
               colors={['#FFFFFF', '#C4C4C4', '#A4A49C']}
               style={styles.contentWrapper}>
-              <Text style={styles.text}>Login</Text>
+              <Pressable
+                onPress={() => navigation.navigate('ShopDetails')}
+                style={styles.navigationCont}>
+                <Text style={{fontSize: 14}}>Create an Account</Text>
+                <Icon name="chevron-right" color="#000" size={30} />
+              </Pressable>
               {errors && errors.general && (
                 <Animatable.Text
                   animation="shake"
@@ -105,21 +115,21 @@ const Login = ({
                   style={{width: 80, height: 80, alignSelf: 'center'}}
                 />
               )}
-              <Pressable
-                onPress={() => navigation.navigate('Register')}
-                style={styles.footer}>
-                <Text>Create an Account!</Text>
-              </Pressable>
               {/* <LottieView
               source={require('../../utils/loading.json')}
               autoPlay
               loop
               style={{width: 130, height: 130, alignSelf: 'center'}}
             /> */}
+              <Pressable
+                style={{backgroundColor: 'yellow', padding: 20}}
+                onPress={() => navigation.navigate('GoogleMap')}>
+                <Text>Go to map</Text>
+              </Pressable>
             </LinearGradient>
           </Animatable.View>
-        </KeyboardAvoidingView>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -141,30 +151,30 @@ export default connect(mapStateToProps, mapDispatchToProps)(Login);
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#08121C',
+    flex: 1,
   },
-  logo: {
-    backgroundColor: '#FFF',
-    height: 100,
-    borderRadius: 50,
-    width: 100,
-    alignSelf: 'center',
-    marginTop: 10,
+  header: {
+    marginTop: 40,
+    marginLeft: 15,
   },
   contentWrapper: {
     height: height * 0.8,
+    width: width * 0.99,
+    flex: 1,
     backgroundColor: '#FFF',
     elevation: 10,
-    paddingTop: 60,
+    paddingBottom: 150,
+    justifyContent: 'center',
     marginTop: 50,
-    marginHorizontal: 5,
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
   },
-  text: {
-    color: '#000',
-    fontSize: 27,
-    textAlign: 'center',
-    marginBottom: 10,
+  navigationCont: {
+    position: 'absolute',
+    top: 20,
+    right: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   footer: {
     padding: 10,
