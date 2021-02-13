@@ -8,6 +8,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -61,7 +62,7 @@ const Login = ({
             style={styles.header}>
             <Text style={{fontSize: 25, color: '#AAAAAA'}}>Login</Text>
             <Text style={{fontSize: 30, color: '#FFFFFF'}}>
-              Welcome to Something!
+              Welcome to Local.ly!
             </Text>
           </Animatable.View>
           <Animatable.View
@@ -73,7 +74,7 @@ const Login = ({
               colors={['#FFFFFF', '#C4C4C4', '#A4A49C']}
               style={styles.contentWrapper}>
               <Pressable
-                onPress={() => navigation.navigate('ShopDetails')}
+                onPress={() => navigation.navigate('Register')}
                 style={styles.navigationCont}>
                 <Text style={{fontSize: 14}}>Create an Account</Text>
                 <Icon name="chevron-right" color="#000" size={30} />
@@ -108,12 +109,13 @@ const Login = ({
                   <Text style={{fontSize: 17, color: '#FFF'}}>Login</Text>
                 </TouchableOpacity>
               ) : (
-                <LottieView
-                  source={require('../../utils/dataLoading.json')}
-                  autoPlay
-                  loop
-                  style={{width: 80, height: 80, alignSelf: 'center'}}
-                />
+                // <LottieView
+                //   source={require('../../utils/dataLoading.json')}
+                //   autoPlay
+                //   loop
+                //   style={{width: 80, height: 80, alignSelf: 'center'}}
+                // />
+                <ActivityIndicator color="#08121C" size={20} />
               )}
               {/* <LottieView
               source={require('../../utils/loading.json')}
@@ -121,11 +123,6 @@ const Login = ({
               loop
               style={{width: 130, height: 130, alignSelf: 'center'}}
             /> */}
-              <Pressable
-                style={{backgroundColor: 'yellow', padding: 20}}
-                onPress={() => navigation.navigate('GoogleMap')}>
-                <Text>Go to map</Text>
-              </Pressable>
             </LinearGradient>
           </Animatable.View>
         </ScrollView>

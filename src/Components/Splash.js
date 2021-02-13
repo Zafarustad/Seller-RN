@@ -2,15 +2,36 @@ import React, {useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {toggleSplash, isAuthenticatedAction} from '../Redux/Actions/authAction';
+import {
+  isAuthenticatedAction,
+  setUserDetailsAction,
+} from '../Redux/Actions/authAction';
 import * as Animatable from 'react-native-animatable';
+import {getData, getJwtToken} from '../utils/utils';
 
-const Splash = ({toggleSplash, isAuthenticatedAction}) => {
+const Splash = ({isAuthenticatedAction, setUserDetailsAction}) => {
   useEffect(() => {
     setTimeout(() => {
-      isAuthenticatedAction(false);
+      getAuthState();
     }, 2000);
   }, []);
+
+  const getAuthState = async () => {
+    const token = await getJwtToken();
+    if (token) {
+      console.log('logged in');
+      const userData = await getData('userData');
+      if (userData) {
+        let parseJsonData = JSON.parse(userData);
+        setUserDetailsAction(parseJsonData);
+        isAuthenticatedAction(true);
+      }
+    } else {
+      console.log('not logged in');
+      isAuthenticatedAction(false);
+    }
+  };
+
   return (
     <View
       style={{
@@ -44,8 +65,8 @@ const Splash = ({toggleSplash, isAuthenticatedAction}) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      toggleSplash,
       isAuthenticatedAction,
+      setUserDetailsAction,
     },
     dispatch,
   );

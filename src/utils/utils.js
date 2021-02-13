@@ -1,4 +1,5 @@
 import SInfo from 'react-native-sensitive-info';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {dev} from '../api';
 
@@ -26,7 +27,9 @@ export const getJwtToken = async () => {
   });
   // const authToken = `Bearer ${token}`;
   // axios.defaults.headers.common['Authorization'] = authToken;
-  return true;
+  if (token) {
+    return true;
+  }
 };
 
 export const deleteJwtToken = async () => {
@@ -35,4 +38,24 @@ export const deleteJwtToken = async () => {
     keychainService: 'JWT',
   });
   delete axios.defaults.headers.common['Authorization'];
+};
+
+export const storeData = async (key, value) => {
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(value));
+    return;
+  } catch (e) {
+    // saving error
+  }
+};
+
+export const getData = async (key) => {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      return value;
+    }
+  } catch (e) {
+    // error reading value
+  }
 };

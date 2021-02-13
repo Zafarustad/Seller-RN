@@ -2,12 +2,14 @@ import {
   IS_AUTHENTICATED,
   SET_ERRORS,
   AUTH_LOADING,
+  SET_USER_DATA,
 } from '../Actions/authAction';
 
 const initialState = {
   isAuthenticated: null,
   errors: null,
   authLoading: false,
+  userData: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -29,6 +31,9 @@ const authReducer = (state = initialState, action) => {
         ...state,
         authLoading: action.payload,
       };
+    }
+    case SET_USER_DATA: {
+      return {...state, userData: action.payload};
     }
     default:
       return state;

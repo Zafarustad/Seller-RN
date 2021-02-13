@@ -10,15 +10,17 @@ import Register from '../Components/Login/Register';
 import Splash from '../Components/Splash';
 import Home from '../Components/Home/Home';
 import SInfo from 'react-native-sensitive-info';
-import ShopDetails from '../Components/Home/ShopDetails';
-import GoogleMap from '../Components/Home/GoogleMap';
+import ShopDetails from '../Components/Home/Details/ShopDetails';
+import GoogleMap from '../Components/Home/Details/GoogleMap';
+import Details from '../Components/Home/Details/Details';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthStack = createStackNavigator();
 const LoginStack = createStackNavigator();
 const HomeStack = createStackNavigator();
 
 const Routes = ({auth}) => {
-  const {isAuthenticated} = auth;
+  const {isAuthenticated, userData} = auth;
 
   useEffect(() => {
     // const getItem = async () => {
@@ -34,6 +36,7 @@ const Routes = ({auth}) => {
     //     sharedPreferencesName: 'JwtToken',
     //     keychainService: 'JWT',
     //   });
+    //   await AsyncStorage.clear()
     // };
     // deleteItem();
   }, []);
@@ -45,14 +48,6 @@ const Routes = ({auth}) => {
   ) : isAuthenticated === false ? (
     <LoginStack.Navigator initialRouteName="Login" headerMode="none">
       <LoginStack.Screen name="Login" component={Login} />
-      <LoginStack.Screen name="ShopDetails" component={ShopDetails} />
-      <LoginStack.Screen
-        name="GoogleMap"
-        component={GoogleMap}
-        options={{
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-        }}
-      />
       <LoginStack.Screen
         name="Register"
         component={Register}
@@ -61,7 +56,19 @@ const Routes = ({auth}) => {
         }}
       />
     </LoginStack.Navigator>
-  ) : isAuthenticated ? (
+  ) : isAuthenticated && userData.detailsCompleted < 2 ? (
+    <HomeStack.Navigator initialRouteName="Details" headerMode="none">
+      <HomeStack.Screen name="Details" component={Details} />
+      <HomeStack.Screen name="ShopDetails" component={ShopDetails} />
+      <HomeStack.Screen
+        name="GoogleMap"
+        component={GoogleMap}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
+      />
+    </HomeStack.Navigator>
+  ) : isAuthenticated && userData.detailsCompleted === 2 ? (
     <HomeStack.Navigator initialRouteName="Home" headerMode="none">
       <HomeStack.Screen name="Home" component={Home} />
     </HomeStack.Navigator>

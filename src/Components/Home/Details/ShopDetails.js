@@ -11,25 +11,16 @@ import {
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {
-  userRegisterDispatch,
-  setErrorsAction,
-  authLoadingAction,
-} from '../../Redux/Actions/authAction';
-import {utilStyles} from '../../utils/styles';
+import {addShopDetailDispatch} from '../../../Redux/Actions/shopAction';
+import {utilStyles} from '../../../utils/styles';
 import * as Animatable from 'react-native-animatable';
-import {MyTextInput} from '../../utils/myElements';
+import {MyTextInput} from '../../../utils/myElements';
 import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 const {height, width} = Dimensions.get('window');
 
-const ShopDetails = ({
-  navigation,
-  auth,
-  userRegisterDispatch,
-  authLoadingAction,
-}) => {
+const ShopDetails = ({navigation, auth, addShopDetailDispatch}) => {
   const [shopName, setShopName] = useState('');
   const [category, setCategory] = useState('');
   const [address, setAddress] = useState('');
@@ -37,7 +28,11 @@ const ShopDetails = ({
   const [pincode, setPincode] = useState('');
   const [gstin, setGstin] = useState('');
 
-  const {errors, authLoading} = auth;
+  const {
+    errors,
+    authLoading,
+    userData: {id},
+  } = auth;
 
   useEffect(() => {
     setTimeout(() => setErrorsAction(null), 5000);
@@ -45,6 +40,7 @@ const ShopDetails = ({
 
   const onSubmit = () => {
     const data = {
+      shopOwnerId: id,
       shopName,
       category,
       address,
@@ -52,7 +48,7 @@ const ShopDetails = ({
       pincode,
       gstin,
     };
-    authLoadingAction(true);
+    addShopDetailDispatch(data);
   };
 
   return (
@@ -112,7 +108,7 @@ const ShopDetails = ({
                 </TouchableOpacity>
               ) : (
                 <LottieView
-                  source={require('../../utils/dataLoading.json')}
+                  source={require('../../../utils/dataLoading.json')}
                   autoPlay
                   loop
                   style={{width: 80, height: 80, alignSelf: 'center'}}
@@ -131,9 +127,7 @@ const mapStateToProps = ({auth}) => ({auth});
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      userRegisterDispatch,
-      setErrorsAction,
-      authLoadingAction,
+      addShopDetailDispatch,
     },
     dispatch,
   );

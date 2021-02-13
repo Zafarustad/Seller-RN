@@ -1,3 +1,3 @@
-const dev = 'https://a2a5454d46fe.ngrok.io';
+const dev = 'http://localhost:5000';
 
 export {dev};

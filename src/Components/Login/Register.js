@@ -47,7 +47,7 @@ const Register = ({
       email,
       password,
       shopOwnerName,
-      number,
+      mobileNumber: number,
     };
     authLoadingAction(true);
     userRegisterDispatch(data);
