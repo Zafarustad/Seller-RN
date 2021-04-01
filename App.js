@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {StatusBar} from 'react-native'
+import {StatusBar} from 'react-native';
 import {Provider} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import Routes from './src/Routes/Routes';
 import store from './src/Redux/Reducers/store';
+import FlashMessage from 'react-native-flash-message';
 
 class App extends Component {
   render() {
@@ -13,6 +14,7 @@ class App extends Component {
         <NavigationContainer>
           <Routes />
         </NavigationContainer>
+        <FlashMessage position="top" />
       </Provider>
     );
   }

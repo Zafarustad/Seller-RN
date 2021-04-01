@@ -1,38 +1,94 @@
-import {axiosInstance} from '../../utils/utils';
+import {axiosInstance, showFlashMessage, storeData} from '../../utils/utils';
 
 export const SET_SHOP_DATA = 'SET_SHOP_DATA';
+export const ADD_PRODUCT = 'ADD_PRODUCT';
+export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 
-export const getShopDataAction = (data) => ({
+import {authLoadingAction, setUserDetailsAction} from './authAction';
+
+export const setShopDataAction = (data) => ({
   type: SET_SHOP_DATA,
+  payload: data,
+});
+
+export const addProductToInventoryAction = (data) => ({
+  type: ADD_PRODUCT,
+  payload: data,
+});
+
+export const deleteInventoryProductAction = (data) => ({
+  type: DELETE_PRODUCT,
   payload: data,
 });
 
 export const addShopDetailDispatch = (data) => async (dispatch) => {
   try {
-    const res = await (await axiosInstance()).post('/shop', data);
-    console.log(res.data);
+    const res = await axiosInstance.post('/seller/shop', data);
+    storeData('userData', res.data.userData);
+    storeData('shopData', res.data.shopData);
+    dispatch(setUserDetailsAction(res.data.userData));
+    dispatch(setShopDataAction(res.data.shopData));
+    showFlashMessage('Shop data updated successfully!', 'success');
+    dispatch(authLoadingAction(false));
   } catch (e) {
     console.log(e.response.data);
+    dispatch(authLoadingAction(false));
+    showFlashMessage('Something went wrong', 'danger');
   }
 };
 
 export const addShopCoordinateDispatch = (data) => async (dispatch) => {
   try {
-    const res = await (await axiosInstance()).post(
-      `shop/coordinate/${data.shopId}`,
-      data,
-    );
+    const res = await axiosInstance.post('/seller/shop/coordinate', data);
     console.log(res.data);
+    storeData('userData', res.data.userData);
+    dispatch(setUserDetailsAction(res.data.userData));
+    dispatch(setShopDataAction(res.data.shopData));
+    showFlashMessage('Shop coordinateds added successfully!', 'success');
+    dispatch(authLoadingAction(false));
   } catch (e) {
     console.log(e.response.data);
+    dispatch(authLoadingAction(false));
+    showFlashMessage('Something went wrong', 'danger');
   }
 };
 
 export const getShopDataDispatch = (shopId) => async (dispatch) => {
   try {
-    const res = await (await axiosInstance()).get(`/shop/${shopId}`);
-    console.log(res.data);
+    const res = await axiosInstance.get(`/seller/shop/${shopId}`);
+    storeData('shopData', res.data);
+    dispatch(setShopDataAction(res.data));
   } catch (e) {
     console.log(e.response.data);
+    showFlashMessage('Something went wrong', 'danger');
+  }
+};
+
+export const addProductToInventoryDispatch = (data) => async (dispatch) => {
+  try {
+    const res = await axiosInstance.post('/seller/shop/product', data);
+    dispatch(addProductToInventoryAction(res.data));
+    dispatch(authLoadingAction(false));
+    showFlashMessage('Product added successfully', 'success');
+  } catch (e) {
+    console.log(e.response.data);
+    dispatch(authLoadingAction(false));
+    showFlashMessage('Something went wrong', 'danger');
+  }
+};
+
+export const deleteInventoryProductDispatch = (shopId, productId) => async (
+  dispatch,
+) => {
+  try {
+    const res = await axiosInstance.delete(
+      `/seller/shop/${shopId}/product/${productId}`,
+    );
+    dispatch(deleteInventoryProductAction(productId));
+    dispatch(authLoadingAction(false));
+  } catch (e) {
+    console.log(e.response.data);
+    dispatch(authLoadingAction(false));
+    showFlashMessage('Something went wrong', 'danger');
   }
 };

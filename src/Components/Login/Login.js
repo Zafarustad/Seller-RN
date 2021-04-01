@@ -20,9 +20,9 @@ import {
 } from '../../Redux/Actions/authAction';
 import {utilStyles} from '../../utils/styles';
 import {MyTextInput} from '../../utils/myElements';
-import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import {showFlashMessage} from '../../utils/utils';
 
 const {height, width} = Dimensions.get('screen');
 
@@ -43,12 +43,20 @@ const Login = ({
   }, [errors]);
 
   const onSubmit = () => {
-    const data = {
-      email,
-      password,
-    };
-    authLoadingAction(true);
-    userLoginDispatch(data);
+    const emailregex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (email.length === 0 || password.length === 0) {
+      showFlashMessage('Fields are empty', 'danger');
+    } else if (!emailregex.test(email)) {
+      showFlashMessage('Email is not valid', 'danger');
+    } else {
+      const data = {
+        email,
+        password,
+      };
+      authLoadingAction(true);
+      userLoginDispatch(data);
+    }
   };
 
   return (
@@ -109,20 +117,12 @@ const Login = ({
                   <Text style={{fontSize: 17, color: '#FFF'}}>Login</Text>
                 </TouchableOpacity>
               ) : (
-                // <LottieView
-                //   source={require('../../utils/dataLoading.json')}
-                //   autoPlay
-                //   loop
-                //   style={{width: 80, height: 80, alignSelf: 'center'}}
-                // />
-                <ActivityIndicator color="#08121C" size={20} />
+                <ActivityIndicator
+                  color="#08121C"
+                  size={30}
+                  style={{marginTop: 15}}
+                />
               )}
-              {/* <LottieView
-              source={require('../../utils/loading.json')}
-              autoPlay
-              loop
-              style={{width: 130, height: 130, alignSelf: 'center'}}
-            /> */}
             </LinearGradient>
           </Animatable.View>
         </ScrollView>

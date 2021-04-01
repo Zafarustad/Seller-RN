@@ -8,8 +8,13 @@ import {
 } from '../Redux/Actions/authAction';
 import * as Animatable from 'react-native-animatable';
 import {getData, getJwtToken} from '../utils/utils';
+import {setShopDataAction} from '../Redux/Actions/shopAction';
 
-const Splash = ({isAuthenticatedAction, setUserDetailsAction}) => {
+const Splash = ({
+  isAuthenticatedAction,
+  setUserDetailsAction,
+  setShopDataAction,
+}) => {
   useEffect(() => {
     setTimeout(() => {
       getAuthState();
@@ -19,15 +24,23 @@ const Splash = ({isAuthenticatedAction, setUserDetailsAction}) => {
   const getAuthState = async () => {
     const token = await getJwtToken();
     if (token) {
-      console.log('logged in');
-      const userData = await getData('userData');
-      if (userData) {
-        let parseJsonData = JSON.parse(userData);
-        setUserDetailsAction(parseJsonData);
+      try {
+        const userData = await getData('userData');
+        if (userData) {
+          let parseJsonData = JSON.parse(userData);
+          setUserDetailsAction(parseJsonData);
+        }
+        const shopData = await getData('shopData');
+        if (shopData) {
+          let parseJsonData = JSON.parse(shopData);
+          setShopDataAction(parseJsonData);
+        }
+      } catch (error) {
+        //no error handling
+      } finally {
         isAuthenticatedAction(true);
       }
     } else {
-      console.log('not logged in');
       isAuthenticatedAction(false);
     }
   };
@@ -54,9 +67,9 @@ const Splash = ({isAuthenticatedAction, setUserDetailsAction}) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        {/* <Text style={{fontSize: 45, color: '#000', fontWeight: 'bold'}}>
+        <Text style={{fontSize: 35, color: '#000', fontFamily: 'monospace'}}>
           L.ly
-        </Text> */}
+        </Text>
       </Animatable.View>
     </View>
   );
@@ -67,6 +80,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       isAuthenticatedAction,
       setUserDetailsAction,
+      setShopDataAction,
     },
     dispatch,
   );

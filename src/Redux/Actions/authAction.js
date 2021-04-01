@@ -1,5 +1,6 @@
 import {axiosInstance} from '../../utils/utils';
 import {setJwtToken, storeData} from '../../utils/utils';
+import {setShopDataAction} from './shopAction';
 
 export const IS_AUTHENTICATED = 'IS_AUTHENTICATED';
 export const SET_ERRORS = 'SET_ERRORS';
@@ -28,12 +29,16 @@ export const setUserDetailsAction = (data) => ({
 
 export const userLoginDispatch = (data) => async (dispatch) => {
   try {
-    const res = await (await axiosInstance()).post('/login', data);
-    const {_id, email, shopOwnerName, detailsCompleted} = res.data;
-    let userData = {_id, email, shopOwnerName, detailsCompleted};
-    setJwtToken('token', res.data.token);
+    const res = await axiosInstance.post('/seller/login', data);
+    const {token, userData} = res.data;
+    setJwtToken('token', token);
     storeData('userData', userData);
     dispatch(setUserDetailsAction(userData));
+    if (res.data.shopData) {
+      const {shopData} = res.data;
+      storeData('shopData', shopData);
+      dispatch(setShopDataAction(shopData));
+    }
     dispatch(isAuthenticatedAction(true));
     dispatch(authLoadingAction(false));
   } catch (e) {
@@ -45,7 +50,7 @@ export const userLoginDispatch = (data) => async (dispatch) => {
 
 export const userRegisterDispatch = (data) => async (dispatch) => {
   try {
-    const res = await (await axiosInstance()).post('/signup', data);
+    const res = await axiosInstance.post('/seller/signup', data);
     const {_id, email, shopOwnerName, detailsCompleted} = res.data;
     let userData = {_id, email, shopOwnerName, detailsCompleted};
     setJwtToken('token', res.data.token);

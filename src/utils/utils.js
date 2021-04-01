@@ -2,18 +2,17 @@ import SInfo from 'react-native-sensitive-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {dev} from '../api';
+import {showMessage} from 'react-native-flash-message';
 
-export const axiosInstance = async () =>
-  axios.create({
-    baseURL: dev,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+export const axiosInstance = axios.create({
+  baseURL: dev,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 export const setJwtToken = async (key, value) => {
-  const authToken = `Bearer ${value}`;
-  axios.defaults.headers.common['Authorization'] = authToken;
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${value}`;
   return SInfo.setItem(key, value, {
     sharedPreferencesName: 'JwtToken',
     keychainService: 'JWT',
@@ -25,8 +24,7 @@ export const getJwtToken = async () => {
     sharedPreferencesName: 'JwtToken',
     keychainService: 'JWT',
   });
-  // const authToken = `Bearer ${token}`;
-  // axios.defaults.headers.common['Authorization'] = authToken;
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   if (token) {
     return true;
   }
@@ -37,7 +35,7 @@ export const deleteJwtToken = async () => {
     sharedPreferencesName: 'JwtToken',
     keychainService: 'JWT',
   });
-  delete axios.defaults.headers.common['Authorization'];
+  delete axiosInstance.defaults.headers.common['Authorization'];
 };
 
 export const storeData = async (key, value) => {
@@ -58,4 +56,15 @@ export const getData = async (key) => {
   } catch (e) {
     // error reading value
   }
+};
+
+export const showFlashMessage = (message, type) => {
+  showMessage({
+    message: message,
+    duration: 3000,
+    type: type,
+    icon: type,
+    floating: true,
+  });
+  // type: danger, info, success, warning, none, default
 };

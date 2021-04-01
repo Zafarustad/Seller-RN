@@ -8,6 +8,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -19,9 +20,9 @@ import {
 import {utilStyles} from '../../utils/styles';
 import * as Animatable from 'react-native-animatable';
 import {MyTextInput} from '../../utils/myElements';
-import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import {showFlashMessage} from '../../utils/utils';
 
 const {height, width} = Dimensions.get('screen');
 
@@ -43,14 +44,31 @@ const Register = ({
   }, [errors]);
 
   const onSubmit = () => {
-    const data = {
-      email,
-      password,
-      shopOwnerName,
-      mobileNumber: number,
-    };
-    authLoadingAction(true);
-    userRegisterDispatch(data);
+    const emailregex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (
+      email.length === 0 ||
+      password.length === 0 ||
+      shopOwnerName.length === 0 ||
+      number.length === 0
+    ) {
+      showFlashMessage('Fields are empty', 'danger');
+    } else if (!emailregex.test(email)) {
+      showFlashMessage('Email is not valid', 'danger');
+    } else if (shopOwnerName.length < 5) {
+      showFlashMessage('Name is too small', 'danger');
+    } else if (number.length < 10) {
+      showFlashMessage('Mobile number is not valid', 'danger');
+    } else {
+      const data = {
+        email,
+        password,
+        shopOwnerName,
+        mobileNumber: number,
+      };
+      authLoadingAction(true);
+      userRegisterDispatch(data);
+    }
   };
 
   return (
@@ -118,11 +136,10 @@ const Register = ({
                   <Text style={{fontSize: 17, color: '#FFF'}}>Submit</Text>
                 </TouchableOpacity>
               ) : (
-                <LottieView
-                  source={require('../../utils/dataLoading.json')}
-                  autoPlay
-                  loop
-                  style={{width: 80, height: 80, alignSelf: 'center'}}
+                <ActivityIndicator
+                  color="#08121C"
+                  size={30}
+                  style={{marginTop: 15}}
                 />
               )}
             </LinearGradient>

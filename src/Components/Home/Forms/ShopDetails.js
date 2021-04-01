@@ -11,16 +11,24 @@ import {
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import {authLoadingAction} from '../../../Redux/Actions/authAction';
 import {addShopDetailDispatch} from '../../../Redux/Actions/shopAction';
 import {utilStyles} from '../../../utils/styles';
 import * as Animatable from 'react-native-animatable';
 import {MyTextInput} from '../../../utils/myElements';
-import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {axiosInstance, showFlashMessage} from '../../../utils/utils';
+import Loader from '../../Custom/Loader';
 
 const {height, width} = Dimensions.get('window');
 
-const ShopDetails = ({navigation, auth, addShopDetailDispatch}) => {
+const ShopDetails = ({
+  navigation,
+  auth,
+  shop,
+  addShopDetailDispatch,
+  authLoadingAction,
+}) => {
   const [shopName, setShopName] = useState('');
   const [category, setCategory] = useState('');
   const [address, setAddress] = useState('');
@@ -31,24 +39,58 @@ const ShopDetails = ({navigation, auth, addShopDetailDispatch}) => {
   const {
     errors,
     authLoading,
-    userData: {id},
+    userData: {_id},
   } = auth;
 
-  useEffect(() => {
-    setTimeout(() => setErrorsAction(null), 5000);
-  }, [errors]);
+  // useEffect(() => {
+  //   setTimeout(() => setErrorsAction(null), 5000);
+  // }, [errors]);
 
-  const onSubmit = () => {
-    const data = {
-      shopOwnerId: id,
-      shopName,
-      category,
-      address,
-      city,
-      pincode,
-      gstin,
-    };
-    addShopDetailDispatch(data);
+  // shopName,
+  // city,
+  // _id,
+  // address,
+  // category,
+  // gstin,
+  // pincode,
+  // shopOwnerId,
+  // shopCoordinate,
+  // shopReviews,
+
+  useEffect(() => {
+    if (shop.shopData) {
+      setShopName(shop.shopData.shopName.toString());
+      setCategory(shop.shopData.category.toString());
+      setAddress(shop.shopData.address.toString());
+      setCity(shop.shopData.city.toString());
+      setPincode(shop.shopData.pincode.toString());
+      setGstin(shop.shopData.gstin.toString());
+    }
+  }, []);
+
+  const onSubmit = async () => {
+    if (
+      shopName.length === 0 ||
+      category.length === 0 ||
+      address.length === 0 ||
+      city.length === 0 ||
+      pincode.length === 0 ||
+      gstin.length === 0
+    ) {
+      showFlashMessage('Fields are empty', 'danger');
+    } else {
+      const data = {
+        shopOwnerId: _id,
+        shopName,
+        category,
+        address,
+        city,
+        pincode,
+        gstin,
+      };
+      authLoadingAction(true);
+      addShopDetailDispatch(data);
+    }
   };
 
   return (
@@ -73,7 +115,6 @@ const ShopDetails = ({navigation, auth, addShopDetailDispatch}) => {
                 value={category}
                 onChangeText={(text) => setCategory(text)}
                 placeholder="Pick Shop Category"
-                secureTextEntry
               />
               <MyTextInput
                 value={address}
@@ -88,7 +129,7 @@ const ShopDetails = ({navigation, auth, addShopDetailDispatch}) => {
               />
               <MyTextInput
                 value={pincode}
-                maxLength={5}
+                maxLength={6}
                 keyboardType="number-pad"
                 onChangeText={(text) => setPincode(text)}
                 placeholder="Enter Area Pincode"
@@ -96,23 +137,21 @@ const ShopDetails = ({navigation, auth, addShopDetailDispatch}) => {
               <MyTextInput
                 value={gstin}
                 maxLength={15}
+                editable={shop.shopData ? false : true}
+                style={{backgroundColor: shop.shopData && '#CCCCCC'}}
+                autoCapitalize="characters"
                 onChangeText={(text) => setGstin(text)}
                 placeholder="GSTIN"
               />
               {!authLoading ? (
                 <TouchableOpacity
-                  //   onPress={() => onSubmit()}
+                  onPress={() => onSubmit()}
                   activeOpacity={0.75}
                   style={utilStyles.button1}>
                   <Text style={{fontSize: 17, color: '#FFF'}}>Submit</Text>
                 </TouchableOpacity>
               ) : (
-                <LottieView
-                  source={require('../../../utils/dataLoading.json')}
-                  autoPlay
-                  loop
-                  style={{width: 80, height: 80, alignSelf: 'center'}}
-                />
+                <Loader />
               )}
             </LinearGradient>
           </Animatable.View>
@@ -122,12 +161,13 @@ const ShopDetails = ({navigation, auth, addShopDetailDispatch}) => {
   );
 };
 
-const mapStateToProps = ({auth}) => ({auth});
+const mapStateToProps = ({auth, shop}) => ({auth, shop});
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       addShopDetailDispatch,
+      authLoadingAction,
     },
     dispatch,
   );
