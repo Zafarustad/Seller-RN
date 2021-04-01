@@ -70,7 +70,7 @@ const Login = ({
             style={styles.header}>
             <Text style={{fontSize: 25, color: '#AAAAAA'}}>Login</Text>
             <Text style={{fontSize: 30, color: '#FFFFFF'}}>
-              Welcome to Local.ly!
+              Welcome to Local.ly Seller!
             </Text>
           </Animatable.View>
           <Animatable.View

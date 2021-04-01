@@ -3,6 +3,7 @@ import {axiosInstance, showFlashMessage, storeData} from '../../utils/utils';
 export const SET_SHOP_DATA = 'SET_SHOP_DATA';
 export const ADD_PRODUCT = 'ADD_PRODUCT';
 export const DELETE_PRODUCT = 'DELETE_PRODUCT';
+export const CLEAR_SHOP_DATA = 'CLEAR_SHOP_DATA';
 
 import {authLoadingAction, setUserDetailsAction} from './authAction';
 
@@ -20,6 +21,10 @@ export const deleteInventoryProductAction = (data) => ({
   type: DELETE_PRODUCT,
   payload: data,
 });
+
+export const clearShopDataAction = () => ({
+  type: CLEAR_SHOP_DATA
+})
 
 export const addShopDetailDispatch = (data) => async (dispatch) => {
   try {

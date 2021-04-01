@@ -2,6 +2,7 @@ import {
   SET_SHOP_DATA,
   ADD_PRODUCT,
   DELETE_PRODUCT,
+  CLEAR_SHOP_DATA
 } from '../Actions/shopAction';
 
 const initialState = {
@@ -36,6 +37,12 @@ const shopReducer = (state = initialState, action) => {
           inventory: filteredArray,
         },
       };
+    }
+    case CLEAR_SHOP_DATA: {
+      return {
+        ...state,
+        shopData: null
+      }
     }
     default:
       return state;

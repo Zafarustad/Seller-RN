@@ -45,7 +45,7 @@ const GoogleMap = ({
 
   return (
     <View style={styles.container}>
-      {!route.params ? (
+      {!route ? (
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -86,7 +86,7 @@ const GoogleMap = ({
           />
         </MapView>
       )}
-      {!route.params && (
+      {!route && (
         <>
           <GooglePlacesAutocomplete
             placeholder="Search Your Shop"

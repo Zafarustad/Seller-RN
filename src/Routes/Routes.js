@@ -22,6 +22,9 @@ import SInfo from 'react-native-sensitive-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {axiosInstance} from '../utils/utils';
 import AddProduct from '../Components/Home/Forms/AddProduct';
+import store from '../Redux/Reducers/store';
+import {clearShopDataAction} from '../Redux/Actions/shopAction';
+import {clearOrderDataAction} from '../Redux/Actions/orderAction';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -66,25 +69,26 @@ const BottomTabNavigator = () => (
 const Routes = ({auth}) => {
   const {isAuthenticated, userData} = auth;
 
-  useEffect(() => {
-    // const getItem = async () => {
-    //   const token = await SInfo.getItem('token', {
-    //     sharedPreferencesName: 'JwtToken',
-    //     keychainService: 'JWT',
-    //   });
-    //   console.log('tokensjdgsh', token);
-    // };
-    // getItem();
-    // const deleteItem = async () => {
-    //   await SInfo.deleteItem('token', {
-    //     sharedPreferencesName: 'JwtToken',
-    //     keychainService: 'JWT',
-    //   });
-    //   await AsyncStorage.clear();
-    //   delete axiosInstance.defaults.headers.common['Authorization'];
-    // };
-    // deleteItem();
-  }, []);
+  // useEffect(() => {
+  //   const getItem = async () => {
+  //     await SInfo.getItem('token', {
+  //       sharedPreferencesName: 'JwtToken',
+  //       keychainService: 'JWT',
+  //     });
+  //   };
+  //   getItem();
+  //   const deleteItem = async () => {
+  //     await SInfo.deleteItem('token', {
+  //       sharedPreferencesName: 'JwtToken',
+  //       keychainService: 'JWT',
+  //     });
+  //     await AsyncStorage.clear();
+  //     delete axiosInstance.defaults.headers.common['Authorization'];
+  //     store.dispatch(clearShopDataAction());
+  //     store.dispatch(clearOrderDataAction());
+  //   };
+  //   deleteItem();
+  // }, []);
 
   return isAuthenticated === null ? (
     <Stack.Navigator initialRouteName="Splash" headerMode="none">

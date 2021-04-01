@@ -1,3 +1,3 @@
-const dev = 'https://fe366feb0132.ngrok.io';
+const dev = ' https://s7cjip52jl.execute-api.ap-south-1.amazonaws.com/production';
 
 export {dev};

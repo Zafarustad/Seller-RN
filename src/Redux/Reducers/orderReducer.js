@@ -1,4 +1,4 @@
-import {PENDING_ORDER_DATA, COMPLETED_ORDER_DATA} from '../Actions/orderAction';
+import {PENDING_ORDER_DATA, COMPLETED_ORDER_DATA, CLEAR_ORDER_DATA} from '../Actions/orderAction';
 
 const initialState = {
   openOrders: null,
@@ -18,6 +18,14 @@ const orderReducer = (state = initialState, action) => {
         ...state,
         completedOrders: action.payload,
       };
+    }
+
+    case CLEAR_ORDER_DATA: {
+      return {
+        ...state,
+        openOrders: null,
+        completedOrders: null
+      }
     }
     default:
       return state;
