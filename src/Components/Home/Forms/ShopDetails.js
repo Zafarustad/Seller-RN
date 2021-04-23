@@ -34,7 +34,6 @@ const ShopDetails = ({
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [pincode, setPincode] = useState('');
-  const [gstin, setGstin] = useState('');
 
   const {
     errors,
@@ -51,7 +50,6 @@ const ShopDetails = ({
   // _id,
   // address,
   // category,
-  // gstin,
   // pincode,
   // shopOwnerId,
   // shopCoordinate,
@@ -64,7 +62,6 @@ const ShopDetails = ({
       setAddress(shop.shopData.address.toString());
       setCity(shop.shopData.city.toString());
       setPincode(shop.shopData.pincode.toString());
-      setGstin(shop.shopData.gstin.toString());
     }
   }, []);
 
@@ -74,8 +71,7 @@ const ShopDetails = ({
       category.length === 0 ||
       address.length === 0 ||
       city.length === 0 ||
-      pincode.length === 0 ||
-      gstin.length === 0
+      pincode.length === 0
     ) {
       showFlashMessage('Fields are empty', 'danger');
     } else {
@@ -86,7 +82,6 @@ const ShopDetails = ({
         address,
         city,
         pincode,
-        gstin,
       };
       authLoadingAction(true);
       addShopDetailDispatch(data);
@@ -133,15 +128,6 @@ const ShopDetails = ({
                 keyboardType="number-pad"
                 onChangeText={(text) => setPincode(text)}
                 placeholder="Enter Area Pincode"
-              />
-              <MyTextInput
-                value={gstin}
-                maxLength={15}
-                editable={shop.shopData ? false : true}
-                style={{backgroundColor: shop.shopData && '#CCCCCC'}}
-                autoCapitalize="characters"
-                onChangeText={(text) => setGstin(text)}
-                placeholder="GSTIN"
               />
               {!authLoading ? (
                 <TouchableOpacity

@@ -1,4 +1,4 @@
-import React, {useState, createRef} from 'react';
+import React, {useState, createRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,8 +10,11 @@ import {
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {authLoadingAction} from '../../Redux/Actions/authAction';
-import {deleteInventoryProductDispatch} from '../../Redux/Actions/shopAction';
+import {
+  deleteInventoryProductDispatch,
+  getShopInventoryDispatch,
+  toggleLoadingAction,
+} from '../../Redux/Actions/shopAction';
 import LinearGradient from 'react-native-linear-gradient';
 import LottieView from 'lottie-react-native';
 import ActionSheet from 'react-native-actions-sheet';
@@ -29,19 +32,28 @@ const Inventory = ({
   auth,
   navigation,
   deleteInventoryProductDispatch,
-  authLoadingAction,
+  toggleLoadingAction,
+  getShopInventoryDispatch,
 }) => {
   const [productId, setProductId] = useState(null);
 
   const {
     shopData: {_id, inventory},
+    dataLoading,
   } = shop;
 
-  const {authLoading} = auth;
+  useEffect(() => {
+    getInventoryProducts();
+  }, []);
+
+  const getInventoryProducts = () => {
+    toggleLoadingAction(true);
+    getShopInventoryDispatch(_id);
+  };
 
   const deleteProduct = () => {
     if (productId) {
-      authLoadingAction(true);
+      toggleLoadingAction(true);
       deleteInventoryProductDispatch(_id, productId);
       actionSheetRef.current?.setModalVisible();
     }
@@ -150,7 +162,7 @@ const Inventory = ({
           </TouchableOpacity>
         </View>
       </ActionSheet>
-      {authLoading && <Loader />}
+      {dataLoading && <Loader />}
     </LinearGradient>
   );
 };
@@ -161,7 +173,8 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       deleteInventoryProductDispatch,
-      authLoadingAction,
+      toggleLoadingAction,
+      getShopInventoryDispatch,
     },
     dispatch,
   );
@@ -231,7 +244,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: 90,
+    bottom: 40,
     right: 30,
     zIndex: 999,
     borderRadius: 70,

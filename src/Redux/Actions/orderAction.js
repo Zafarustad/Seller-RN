@@ -21,7 +21,6 @@ export const clearOrderDataAction = () => ({
 export const getPendingOrderDataDispatch = (shopId) => async (dispatch) => {
   try {
     const res = await axiosInstance.get(`/seller/order/pending/${shopId}`);
-    console.log(res.data)
     dispatch(getPendingOrderDataAction(res.data));
   } catch (e) {
     console.log(e.response.data);
@@ -29,10 +28,8 @@ export const getPendingOrderDataDispatch = (shopId) => async (dispatch) => {
 };
 
 export const getCompletedOrderDataDispatch = (shopId) => async (dispatch) => {
-  console.log('sdnbhsvhs sdvsydbskjbs')
   try {
     const res = await axiosInstance.get(`/seller/order/completed/${shopId}`);
-    console.log('completed', res.data)
     dispatch(getCompletedOrderDataAction(res.data));
   } catch (e) {
     console.log(e.response.data);

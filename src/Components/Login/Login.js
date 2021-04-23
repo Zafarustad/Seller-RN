@@ -23,6 +23,8 @@ import {MyTextInput} from '../../utils/myElements';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {showFlashMessage} from '../../utils/utils';
+import {clearOrderDataAction} from '../../Redux/Actions/orderAction';
+import {clearShopDataAction} from '../../Redux/Actions/shopAction';
 
 const {height, width} = Dimensions.get('screen');
 
@@ -32,11 +34,20 @@ const Login = ({
   userLoginDispatch,
   setErrorsAction,
   authLoadingAction,
+  clearOrderDataAction,
+  clearShopDataAction,
 }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const {errors, authLoading} = auth;
+
+  useEffect(() => {
+    setTimeout(() => {
+      clearOrderDataAction();
+      clearShopDataAction();
+    }, 3000);
+  }, []);
 
   useEffect(() => {
     setTimeout(() => setErrorsAction(null), 5000);
@@ -139,6 +150,8 @@ const mapDispatchToProps = (dispatch) =>
       userLoginDispatch,
       setErrorsAction,
       authLoadingAction,
+      clearOrderDataAction,
+      clearShopDataAction,
     },
     dispatch,
   );

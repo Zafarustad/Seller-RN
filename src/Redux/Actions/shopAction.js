@@ -4,6 +4,8 @@ export const SET_SHOP_DATA = 'SET_SHOP_DATA';
 export const ADD_PRODUCT = 'ADD_PRODUCT';
 export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 export const CLEAR_SHOP_DATA = 'CLEAR_SHOP_DATA';
+export const GET_SHOP_INVENTORY = 'GET_SHOP_INVENTORY';
+export const TOOGLE_LOADING = 'TOOGLE_LOADING';
 
 import {authLoadingAction, setUserDetailsAction} from './authAction';
 
@@ -22,9 +24,19 @@ export const deleteInventoryProductAction = (data) => ({
   payload: data,
 });
 
+export const getShopInventoryAction = (data) => ({
+  type: GET_SHOP_INVENTORY,
+  payload: data,
+});
+
 export const clearShopDataAction = () => ({
-  type: CLEAR_SHOP_DATA
-})
+  type: CLEAR_SHOP_DATA,
+});
+
+export const toggleLoadingAction = (data) => ({
+  type: TOOGLE_LOADING,
+  payload: data
+});
 
 export const addShopDetailDispatch = (data) => async (dispatch) => {
   try {
@@ -45,7 +57,6 @@ export const addShopDetailDispatch = (data) => async (dispatch) => {
 export const addShopCoordinateDispatch = (data) => async (dispatch) => {
   try {
     const res = await axiosInstance.post('/seller/shop/coordinate', data);
-    console.log(res.data);
     storeData('userData', res.data.userData);
     dispatch(setUserDetailsAction(res.data.userData));
     dispatch(setShopDataAction(res.data.shopData));
@@ -82,6 +93,18 @@ export const addProductToInventoryDispatch = (data) => async (dispatch) => {
   }
 };
 
+export const getShopInventoryDispatch = (shopId) => async (dispatch) => {
+  try {
+    const res = await axiosInstance.get(`/seller/inventory/${shopId}`);
+    dispatch(getShopInventoryAction(res.data));
+    dispatch(toggleLoadingAction(false));
+  } catch (e) {
+    console.log(e.response.data);
+    dispatch(toggleLoadingAction(false));
+    showFlashMessage('Something went wrong', 'danger');
+  }
+};
+
 export const deleteInventoryProductDispatch = (shopId, productId) => async (
   dispatch,
 ) => {
@@ -90,10 +113,10 @@ export const deleteInventoryProductDispatch = (shopId, productId) => async (
       `/seller/shop/${shopId}/product/${productId}`,
     );
     dispatch(deleteInventoryProductAction(productId));
-    dispatch(authLoadingAction(false));
+    dispatch(toggleLoadingAction(false));
   } catch (e) {
     console.log(e.response.data);
-    dispatch(authLoadingAction(false));
+    dispatch(toggleLoadingAction(false));
     showFlashMessage('Something went wrong', 'danger');
   }
 };

@@ -17,6 +17,7 @@ import dayjs from 'dayjs';
 import ActionSheet from 'react-native-actions-sheet';
 import NoDataImg from '../../assests/images/no-data1.png';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import Label, {Orientation} from 'react-native-label';
 
 const {height, width} = Dimensions.get('screen');
 
@@ -32,7 +33,7 @@ const OrderPending = ({shop, order, getPendingOrderDataDispatch}) => {
   }, []);
 
   const {openOrders} = order;
-  console.log('openOrders', openOrders);
+  // console.log('openOrders', openOrders);
 
   const renderOrderList = ({item}) => (
     <View style={styles.listCont}>
@@ -43,7 +44,7 @@ const OrderPending = ({shop, order, getPendingOrderDataDispatch}) => {
           actionSheetRef.current?.setModalVisible();
         }}
         activeOpacity={0.7}
-        style={{position: 'absolute', right: 10, top: 10, zIndex: 999}}>
+        style={{position: 'absolute', right: 10, top: 25, zIndex: 999}}>
         <MaterialIcon name="open-in-new" color="#000000" size={22} />
       </TouchableOpacity>
       <Text style={{fontSize: 15, marginBottom: 10}}>
@@ -54,9 +55,17 @@ const OrderPending = ({shop, order, getPendingOrderDataDispatch}) => {
       </Text>
       <Text style={{marginBottom: 10}}>Order id: {item._id} </Text>
       <Text
-        style={{position: 'absolute', right: 10, bottom: 5, color: '#AAAAAA'}}>
+        style={{
+          position: 'absolute',
+          right: 10,
+          bottom: 5,
+          color: '#AAAAAA',
+        }}>
         {dayjs(item.createdAt).format('MMM D, YYYY h:mm A')}{' '}
       </Text>
+      <View style={styles.ribbon}>
+        <Text style={styles.ribbonText}>Open</Text>
+      </View>
     </View>
   );
 
@@ -149,13 +158,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listCont: {
-    width: width * 0.8,
+    width: width * 0.9,
     padding: 20,
     borderRadius: 8,
     elevation: 10,
     backgroundColor: '#FFFFFF',
-    borderBottomColor: '#08121C',
-    borderBottomWidth: 5,
+    marginBottom: 25,
   },
   orderItemCont: {
     alignSelf: 'center',
@@ -166,6 +174,22 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     padding: 15,
+  },
+  ribbon: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: -999,
+    backgroundColor: '#11C866',
+    width: 70,
+    height: 20,
+    borderTopRightRadius: 3,
+    borderBottomLeftRadius: 3,
+  },
+  ribbonText: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: '#FFF',
   },
   orderItemText: {
     fontSize: 15,
@@ -178,27 +202,3 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
 });
-
-{
-  /* <ScrollView>
-    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-      {Array.from({ length: 5 }).map(() => (
-        <View
-          style={{
-            alignSelf: 'center',
-            width: width * 0.9,
-            borderBottomColor: '#000',
-            borderBottomWidth: 0.5,
-            marginVertical: 10,
-            borderBottomLeftRadius: 10,
-            borderBottomRightRadius: 10,
-            padding: 15,
-          }}>
-          <Text style={{ fontSize: 15, marginVertical: 5 }}>Name: </Text>
-          <Text style={{ fontSize: 15, marginVertical: 5 }}>Price: </Text>
-          <Text style={{ fontSize: 15, marginVertical: 5 }}>Quantity: </Text>
-        </View>
-      ))}
-    </View>
-    </ScrollView> */
-}

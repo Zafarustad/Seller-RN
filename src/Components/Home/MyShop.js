@@ -1,4 +1,4 @@
-import React, {useEffect, createRef} from 'react';
+import React, {useState, useEffect, createRef} from 'react';
 import {
   View,
   Text,
@@ -10,17 +10,19 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import SInfo from 'react-native-sensitive-info';
 import LinearGradient from 'react-native-linear-gradient';
+import ImagePickerModal from './ImagePickerModal';
+import {axiosInstance} from '../../utils/utils';
 import {isAuthenticatedAction} from '../../Redux/Actions/authAction';
 import {getShopDataDispatch} from '../../Redux/Actions/shopAction';
-import SInfo from 'react-native-sensitive-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {axiosInstance} from '../../utils/utils';
 import ShopImg from '../../assests/images/shop.png';
 import ActionSheet from 'react-native-actions-sheet';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
+import {utilStyles} from '../../utils/styles';
 
 const {height, width} = Dimensions.get('screen');
 
@@ -32,35 +34,22 @@ const MyShop = ({
   isAuthenticatedAction,
   navigation,
 }) => {
-  let actionSheet;
-
-  const {
-    shopData: {
-      shopName,
-      city,
-      _id,
-      address,
-      category,
-      gstin,
-      pincode,
-      shopOwnerId,
-      shopCoordinate,
-      shopReviews,
-    },
-  } = shop;
+  const [shopImage, setShopImage] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const {shopData} = shop;
 
   useEffect(() => {
-    // getShopDataDispatch(_id);
+    getShopDataDispatch(shopData._id);
   }, []);
 
   const logout = async () => {
+    isAuthenticatedAction(false);
     await SInfo.deleteItem('token', {
       sharedPreferencesName: 'JwtToken',
       keychainService: 'JWT',
     });
     await AsyncStorage.clear();
     delete axiosInstance.defaults.headers.common['Authorization'];
-    isAuthenticatedAction(false);
   };
 
   return (
@@ -78,24 +67,30 @@ const MyShop = ({
             style={{position: 'absolute', right: 20, top: 20}}>
             <SimpleLineIcon name="options-vertical" size={22} color="#FFF" />
           </TouchableOpacity>
-
-          <View style={styles.imgCont}>
-            <Image source={ShopImg} style={styles.img} />
+          <View>
+            <Image
+              source={!shopImage ? ShopImg : {uri: shopImage}}
+              style={styles.img}
+            />
           </View>
-          <Text style={styles.shopName}>{shopName}</Text>
-          <Text style={styles.category}>{category}</Text>
+          <Text style={styles.shopName}>{shopData.shopName}</Text>
+          <Text style={styles.category}>{shopData.category}</Text>
         </View>
       </View>
       <ScrollView style={{marginBottom: 10}}>
         <View style={styles.bottomCont}>
-          <Text style={styles.text}>Address: {address}</Text>
-          <Text style={styles.text}>City: {city}</Text>
-          <Text style={styles.text}>Pin Code: {pincode}</Text>
-          <Text style={styles.text}>GSTIN: {gstin}</Text>
+          <Text style={styles.text}>Address: {shopData.address}</Text>
+          <Text style={styles.text}>City: {shopData.city}</Text>
+          <Text style={styles.text}>Pin Code: {shopData.pincode}</Text>
+          <Text style={styles.text}>GSTIN: {shopData.gstin}</Text>
         </View>
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => navigation.navigate('GoogleMap', {shopCoordinate})}
+          onPress={() =>
+            navigation.navigate('GoogleMap', {
+              shopCoordinate: shopData.shopCoordinate,
+            })
+          }
           style={styles.mapBtn}>
           <Feather name="map" size={17} color="#000" style={{marginLeft: 10}} />
           <Text style={{fontSize: 17, marginLeft: 10}}>Check on map</Text>
@@ -107,11 +102,19 @@ const MyShop = ({
           <AntDesign
             name="poweroff"
             size={17}
-            color="#000"
+            color="red"
             style={{marginLeft: 10}}
           />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
+        {shopImage && (
+          <TouchableOpacity
+            //onPress={() => onSubmit()}
+            activeOpacity={0.75}
+            style={[utilStyles.button1, {marginTop: 30}]}>
+            <Text style={{fontSize: 17, color: '#FFF'}}>Update Image</Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
       <ActionSheet ref={actionSheetRef} gestureEnabled indicatorColor="#000">
         <View
@@ -149,8 +152,28 @@ const MyShop = ({
             />
             <Text style={styles.logoutText}>Change Shop Location</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              actionSheetRef.current?.setModalVisible();
+              setModalVisible(true);
+            }}
+            activeOpacity={0.5}
+            style={styles.actionSheetBtn}>
+            <AntDesign
+              name="edit"
+              size={17}
+              color="#000"
+              style={{marginLeft: 10}}
+            />
+            <Text style={styles.logoutText}>Upload/Change Shop Image</Text>
+          </TouchableOpacity>
         </View>
       </ActionSheet>
+      <ImagePickerModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        setImage={setShopImage}
+      />
     </LinearGradient>
   );
 };
@@ -185,20 +208,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  imgCont: {
-    width: 100,
-    height: 100,
-    backgroundColor: '#FFF',
-    borderRadius: 100,
-    alignItems: 'center',
-    borderColor: '#FFF',
-    borderWidth: 2,
-  },
   img: {
-    flex: 1,
-    width: '80%',
-    height: '80%',
-    resizeMode: 'contain',
+    width: 120,
+    height: 120,
+    marginVertical: 15,
+    alignSelf: 'center',
+    borderRadius: 100,
   },
   shopName: {
     color: '#AAA',
@@ -210,6 +225,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 15,
     marginTop: 10,
+    marginBottom: 30,
   },
   bottomCont: {
     backgroundColor: '#FFF',

@@ -2,11 +2,14 @@ import {
   SET_SHOP_DATA,
   ADD_PRODUCT,
   DELETE_PRODUCT,
-  CLEAR_SHOP_DATA
+  CLEAR_SHOP_DATA,
+  GET_SHOP_INVENTORY,
+  TOOGLE_LOADING
 } from '../Actions/shopAction';
 
 const initialState = {
   shopData: null,
+  dataLoading: false,
 };
 
 const shopReducer = (state = initialState, action) => {
@@ -38,11 +41,28 @@ const shopReducer = (state = initialState, action) => {
         },
       };
     }
+
+    case GET_SHOP_INVENTORY: {
+      return {
+        ...state,
+        shopData: {
+          ...state.shopData,
+          inventory: action.payload,
+        },
+      };
+    }
+    case TOOGLE_LOADING: {
+      return {
+        ...state,
+        dataLoading: action.payload,
+      };
+    }
+
     case CLEAR_SHOP_DATA: {
       return {
         ...state,
-        shopData: null
-      }
+        shopData: null,
+      };
     }
     default:
       return state;

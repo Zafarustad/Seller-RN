@@ -25,6 +25,8 @@
     "react-native-flash-message": "^0.1.23",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-google-places-autocomplete": "^2.1.2",
+    "react-native-image-picker": "^3.3.2",
+    "react-native-label": "0.0.1-alpha.1",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-maps": "0.27.1",
     "react-native-reanimated": "^1.13.2",

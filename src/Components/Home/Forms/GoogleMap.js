@@ -27,10 +27,10 @@ const GoogleMap = ({
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
 
+  // console.log(route);
+
   const {userData, authLoading} = auth;
   const {shopData} = shop;
-
-  // console.log('route', typeof route.params.shopCoordinate);
 
   const onSubmit = () => {
     let data = {
@@ -45,7 +45,7 @@ const GoogleMap = ({
 
   return (
     <View style={styles.container}>
-      {!route ? (
+      {!route || !route.params ? (
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -67,7 +67,7 @@ const GoogleMap = ({
             />
           )}
         </MapView>
-      ) : (
+      ) : route && route.params ? (
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -85,8 +85,8 @@ const GoogleMap = ({
             isPreselected
           />
         </MapView>
-      )}
-      {!route && (
+      ) : null}
+      {!route || !route.params  && (
         <>
           <GooglePlacesAutocomplete
             placeholder="Search Your Shop"

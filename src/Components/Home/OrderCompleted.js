@@ -33,6 +33,8 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
 
   const {completedOrders} = order;
 
+  // console.log('completedOrders', completedOrders);
+
   const renderOrderList = ({item}) => (
     <View style={styles.listCont}>
       <TouchableOpacity
@@ -42,7 +44,7 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
           actionSheetRef.current?.setModalVisible();
         }}
         activeOpacity={0.7}
-        style={{position: 'absolute', right: 10, top: 10, zIndex: 999}}>
+        style={{position: 'absolute', right: 10, top: 25, zIndex: 999}}>
         <MaterialIcon name="open-in-new" color="#000000" size={22} />
       </TouchableOpacity>
       <Text style={{fontSize: 15, marginBottom: 10}}>
@@ -56,6 +58,17 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
         style={{position: 'absolute', right: 10, bottom: 5, color: '#AAAAAA'}}>
         {dayjs(item.createdAt).format('MMM D, YYYY h:mm A')}{' '}
       </Text>
+      <View
+        style={[
+          styles.ribbon,
+          {backgroundColor: item.cancelled ? '#FC2424' : '#FB9F06'},
+        ]}>
+        {item.cancelled ? (
+          <Text style={styles.ribbonText}>Cancelled</Text>
+        ) : (
+          <Text style={styles.ribbonText}>Completed</Text>
+        )}
+      </View>
     </View>
   );
 
@@ -66,8 +79,6 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
       <Text style={styles.orderItemText}>Quantity:{item.quantity} </Text>
     </View>
   );
-
-  console.log(completedOrders);
 
   return (
     <LinearGradient
@@ -156,13 +167,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listCont: {
-    width: width * 0.8,
+    width: width * 0.9,
     padding: 20,
     borderRadius: 8,
     elevation: 10,
     backgroundColor: '#FFFFFF',
-    borderLeftColor: '#08121C',
-    borderLeftWidth: 10,
+    marginBottom: 25,
   },
   orderItemCont: {
     alignSelf: 'center',
@@ -173,6 +183,21 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     padding: 15,
+  },
+  ribbon: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: -999,
+    height: 20,
+    width: 80,
+    borderTopRightRadius: 3,
+    borderBottomLeftRadius: 3,
+  },
+  ribbonText: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: '#FFF',
   },
   orderItemText: {
     fontSize: 15,

@@ -1,11 +1,11 @@
 import SInfo from 'react-native-sensitive-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {dev} from '../api';
+import {api} from '../api';
 import {showMessage} from 'react-native-flash-message';
 
 export const axiosInstance = axios.create({
-  baseURL: dev,
+  baseURL: api,
   headers: {
     'Content-Type': 'application/json',
   },
