@@ -42,7 +42,7 @@ const OrderPending = ({
   }, []);
 
   const {openOrders} = order;
-  // console.log('openOrders', openOrders);
+  console.log('openOrders', openOrders);
 
   const renderOrderList = ({item}) => (
     <View style={styles.listCont}>
@@ -63,13 +63,12 @@ const OrderPending = ({
         Order Total: &#8377;{item.totalAmount}{' '}
       </Text>
       <Text style={{marginBottom: 10}}>Order id: {item._id} </Text>
-      <Text
-        style={{
-          position: 'absolute',
-          right: 10,
-          bottom: 5,
-          color: '#AAAAAA',
-        }}>
+      {item.upiPaid && (
+        <View style={styles.upi}>
+          <Text style={styles.upiText}>Upi Paid</Text>
+        </View>
+      )}
+      <Text style={styles.date}>
         {dayjs(item.createdAt).format('MMM D, YYYY h:mm A')}{' '}
       </Text>
       <View style={styles.ribbon}>
@@ -193,6 +192,24 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     padding: 15,
+  },
+  date: {
+    position: 'absolute',
+    right: 10,
+    bottom: 5,
+    color: '#AAAAAA',
+  },
+  upi: {
+    width: 70,
+    backgroundColor: '#08121C',
+    height: 20,
+    borderRadius: 3,
+  },
+  upiText: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: '#FFF',
+    fontWeight: 'bold',
   },
   ribbon: {
     position: 'absolute',

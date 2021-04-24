@@ -33,6 +33,7 @@ const ShopDetails = ({
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [pincode, setPincode] = useState('');
+  const [upi, setUpi] = useState('');
 
   const {
     errors,
@@ -61,6 +62,9 @@ const ShopDetails = ({
       setAddress(shop.shopData.address.toString());
       setCity(shop.shopData.city.toString());
       setPincode(shop.shopData.pincode.toString());
+      // if (shop.shopDate.upiId) {
+      //   setUpi(shop.shopData.upiId.toString());
+      // }
     }
   }, []);
 
@@ -74,14 +78,25 @@ const ShopDetails = ({
     ) {
       showFlashMessage('Fields are empty', 'danger');
     } else {
-      const data = {
-        shopOwnerId: _id,
-        shopName,
-        category,
-        address,
-        city,
-        pincode,
-      };
+      const data =
+        upi.length === 0
+          ? {
+              shopOwnerId: _id,
+              shopName,
+              category,
+              address,
+              city,
+              pincode,
+            }
+          : {
+              shopOwnerId: _id,
+              shopName,
+              category,
+              address,
+              city,
+              pincode,
+              upi,
+            };
       authLoadingAction(true);
       addShopDetailDispatch(data);
     }
@@ -127,6 +142,11 @@ const ShopDetails = ({
                 keyboardType="number-pad"
                 onChangeText={(text) => setPincode(text)}
                 placeholder="Enter Area Pincode"
+              />
+              <MyTextInput
+                value={upi}
+                onChangeText={(text) => setUpi(text)}
+                placeholder="Enter UPI ID"
               />
               {!authLoading ? (
                 <TouchableOpacity
