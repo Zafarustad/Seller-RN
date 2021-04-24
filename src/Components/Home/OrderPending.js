@@ -11,25 +11,34 @@ import {FlatList} from 'react-native-gesture-handler';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {getPendingOrderDataDispatch} from '../../Redux/Actions/orderAction';
+import {getShopDataDispatch} from '../../Redux/Actions/shopAction';
 import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import dayjs from 'dayjs';
 import ActionSheet from 'react-native-actions-sheet';
 import NoDataImg from '../../assests/images/no-data1.png';
+import UnverifiedImg from '../../assests/images/unverified.png';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import Label, {Orientation} from 'react-native-label';
 
 const {height, width} = Dimensions.get('screen');
 
 const actionSheetRef = createRef();
 
-const OrderPending = ({shop, order, getPendingOrderDataDispatch}) => {
+const OrderPending = ({
+  shop,
+  order,
+  getPendingOrderDataDispatch,
+  getShopDataDispatch,
+}) => {
   const [items, setItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(null);
   const flatlistRef = useRef(null);
 
+  // console.log('shopData', shop.shopData);
+
   useEffect(() => {
     getPendingOrderDataDispatch(shop.shopData._id);
+    getShopDataDispatch(shop.shopData._id);
   }, []);
 
   const {openOrders} = order;
@@ -83,46 +92,55 @@ const OrderPending = ({shop, order, getPendingOrderDataDispatch}) => {
       colors={['#FFFFFF', '#C4C4C4', '#A4A49C']}
       style={styles.container}>
       {openOrders ? (
-        openOrders.length > 0 ? (
-          <View style={{alignItems: 'center', marginTop: 30}}>
-            <FlatList
-              data={openOrders}
-              keyExtractor={(item) => item._id}
-              renderItem={renderOrderList}
-            />
-            <ActionSheet
-              ref={actionSheetRef}
-              gestureEnabled
-              initialOffsetFromBottom={0.8}
-              indicatorColor="#000">
-              <View style={{height: height * 0.8}}>
-                <Text style={styles.sheetTotalAmt}>
-                  Order Total: &#8377;{totalAmount}
-                </Text>
-                <FlatList
-                  data={items}
-                  keyExtractor={(item) => item.productName}
-                  renderItem={renderItemList}
-                  ref={flatlistRef}
-                  nestedScrollEnabled
-                  onScrollEndDrag={() =>
-                    actionSheetRef.current?.handleChildScrollEnd()
-                  }
-                  onScrollAnimationEnd={() =>
-                    actionSheetRef.current?.handleChildScrollEnd()
-                  }
-                  onMomentumScrollEnd={() =>
-                    actionSheetRef.current?.handleChildScrollEnd()
-                  }
-                />
-              </View>
-            </ActionSheet>
-          </View>
+        shop.shopData.verified ? (
+          openOrders.length > 0 ? (
+            <View style={{alignItems: 'center', marginTop: 30}}>
+              <FlatList
+                data={openOrders}
+                keyExtractor={(item) => item._id}
+                renderItem={renderOrderList}
+              />
+              <ActionSheet
+                ref={actionSheetRef}
+                gestureEnabled
+                initialOffsetFromBottom={0.8}
+                indicatorColor="#000">
+                <View style={{height: height * 0.8}}>
+                  <Text style={styles.sheetTotalAmt}>
+                    Order Total: &#8377;{totalAmount}
+                  </Text>
+                  <FlatList
+                    data={items}
+                    keyExtractor={(item) => item.productName}
+                    renderItem={renderItemList}
+                    ref={flatlistRef}
+                    nestedScrollEnabled
+                    onScrollEndDrag={() =>
+                      actionSheetRef.current?.handleChildScrollEnd()
+                    }
+                    onScrollAnimationEnd={() =>
+                      actionSheetRef.current?.handleChildScrollEnd()
+                    }
+                    onMomentumScrollEnd={() =>
+                      actionSheetRef.current?.handleChildScrollEnd()
+                    }
+                  />
+                </View>
+              </ActionSheet>
+            </View>
+          ) : (
+            <View
+              style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+              <Image source={NoDataImg} style={styles.img} />
+              <Text style={{fontSize: 18}}>There are no open orders</Text>
+            </View>
+          )
         ) : (
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Image source={NoDataImg} style={{width: 250, height: 250}} />
-            <Text style={{fontSize: 18}}>There are no open orders</Text>
+            <Text style={{fontSize: 16}}>Submit Shop Documents</Text>
+            <Text style={{fontSize: 16}}>To Be Able To Recieve Orders</Text>
+            <Image source={UnverifiedImg} style={styles.img} />
           </View>
         )
       ) : (
@@ -146,6 +164,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       getPendingOrderDataDispatch,
+      getShopDataDispatch,
     },
     dispatch,
   );
@@ -180,7 +199,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     zIndex: -999,
-    backgroundColor: '#11C866',
+    backgroundColor: '#FB9F06',
     width: 70,
     height: 20,
     borderTopRightRadius: 3,
@@ -200,5 +219,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '800',
     marginVertical: 20,
+  },
+  img: {
+    width: 250,
+    height: 250,
   },
 });

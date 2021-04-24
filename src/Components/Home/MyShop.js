@@ -15,7 +15,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import ImagePickerModal from './ImagePickerModal';
 import {axiosInstance} from '../../utils/utils';
 import {isAuthenticatedAction} from '../../Redux/Actions/authAction';
-import {getShopDataDispatch} from '../../Redux/Actions/shopAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ShopImg from '../../assests/images/shop.png';
 import ActionSheet from 'react-native-actions-sheet';
@@ -28,19 +27,10 @@ const {height, width} = Dimensions.get('screen');
 
 const actionSheetRef = createRef();
 
-const MyShop = ({
-  shop,
-  getShopDataDispatch,
-  isAuthenticatedAction,
-  navigation,
-}) => {
+const MyShop = ({shop, isAuthenticatedAction, navigation}) => {
   const [shopImage, setShopImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const {shopData} = shop;
-
-  useEffect(() => {
-    getShopDataDispatch(shopData._id);
-  }, []);
 
   const logout = async () => {
     isAuthenticatedAction(false);
@@ -183,7 +173,6 @@ const mapStateToProps = ({shop}) => ({shop});
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      getShopDataDispatch,
       isAuthenticatedAction,
     },
     dispatch,

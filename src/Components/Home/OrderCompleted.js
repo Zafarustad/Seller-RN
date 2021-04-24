@@ -16,6 +16,7 @@ import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import dayjs from 'dayjs';
 import NoDataImg from '../../assests/images/no-data1.png';
+import UnverifiedImg from '../../assests/images/unverified.png';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 const {height, width} = Dimensions.get('screen');
@@ -61,7 +62,7 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
       <View
         style={[
           styles.ribbon,
-          {backgroundColor: item.cancelled ? '#FC2424' : '#FB9F06'},
+          {backgroundColor: item.cancelled ? '#FC2424' : '#11C866' },
         ]}>
         {item.cancelled ? (
           <Text style={styles.ribbonText}>Cancelled</Text>
@@ -86,52 +87,61 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
       colors={['#FFFFFF', '#C4C4C4', '#A4A49C']}
       style={styles.container}>
       {completedOrders ? (
-        completedOrders.length > 0 ? (
-          <View style={{alignItems: 'center', marginTop: 30}}>
-            <FlatList
-              data={completedOrders}
-              keyExtractor={(item) => item._id}
-              renderItem={renderOrderList}
-            />
-            <ActionSheet
-              ref={actionSheetRef}
-              gestureEnabled
-              initialOffsetFromBottom={0.8}
-              indicatorColor="#000">
-              <View style={{height: height * 0.8}}>
-                <Text
-                  style={{
-                    marginLeft: 40,
-                    fontSize: 20,
-                    fontWeight: '800',
-                    marginVertical: 20,
-                  }}>
-                  Order Total: &#8377;{totalAmount}
-                </Text>
-                <FlatList
-                  data={items}
-                  keyExtractor={(item) => item.productName}
-                  renderItem={renderItemList}
-                  ref={flatlistRef}
-                  nestedScrollEnabled
-                  onScrollEndDrag={() =>
-                    actionSheetRef.current?.handleChildScrollEnd()
-                  }
-                  onScrollAnimationEnd={() =>
-                    actionSheetRef.current?.handleChildScrollEnd()
-                  }
-                  onMomentumScrollEnd={() =>
-                    actionSheetRef.current?.handleChildScrollEnd()
-                  }
-                />
-              </View>
-            </ActionSheet>
-          </View>
+        shop.shopData.verified ? (
+          completedOrders.length > 0 ? (
+            <View style={{alignItems: 'center', marginTop: 30}}>
+              <FlatList
+                data={completedOrders}
+                keyExtractor={(item) => item._id}
+                renderItem={renderOrderList}
+              />
+              <ActionSheet
+                ref={actionSheetRef}
+                gestureEnabled
+                initialOffsetFromBottom={0.8}
+                indicatorColor="#000">
+                <View style={{height: height * 0.8}}>
+                  <Text
+                    style={{
+                      marginLeft: 40,
+                      fontSize: 20,
+                      fontWeight: '800',
+                      marginVertical: 20,
+                    }}>
+                    Order Total: &#8377;{totalAmount}
+                  </Text>
+                  <FlatList
+                    data={items}
+                    keyExtractor={(item) => item.productName}
+                    renderItem={renderItemList}
+                    ref={flatlistRef}
+                    nestedScrollEnabled
+                    onScrollEndDrag={() =>
+                      actionSheetRef.current?.handleChildScrollEnd()
+                    }
+                    onScrollAnimationEnd={() =>
+                      actionSheetRef.current?.handleChildScrollEnd()
+                    }
+                    onMomentumScrollEnd={() =>
+                      actionSheetRef.current?.handleChildScrollEnd()
+                    }
+                  />
+                </View>
+              </ActionSheet>
+            </View>
+          ) : (
+            <View
+              style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+              <Image source={NoDataImg} style={styles.img} />
+              <Text style={{fontSize: 18}}>No orders found!</Text>
+            </View>
+          )
         ) : (
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Image source={NoDataImg} style={{width: 250, height: 250}} />
-            <Text style={{fontSize: 18}}>No orders found!</Text>
+            <Text style={{fontSize: 16}}>Submit Shop Documents</Text>
+            <Text style={{fontSize: 16}}>To Be Able To Recieve Orders</Text>
+            <Image source={UnverifiedImg} style={styles.img} />
           </View>
         )
       ) : (
@@ -209,4 +219,8 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     marginVertical: 20,
   },
+  img: {
+    width: 250,
+    height: 250
+  }
 });
