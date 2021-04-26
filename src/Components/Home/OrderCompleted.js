@@ -37,17 +37,14 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
   // console.log('completedOrders', completedOrders);
 
   const renderOrderList = ({item}) => (
-    <View style={styles.listCont}>
-      <TouchableOpacity
-        onPress={() => {
-          setItems(item.items);
-          setTotalAmount(item.totalAmount);
-          actionSheetRef.current?.setModalVisible();
-        }}
-        activeOpacity={0.7}
-        style={{position: 'absolute', right: 10, top: 25, zIndex: 999}}>
-        <MaterialIcon name="open-in-new" color="#000000" size={22} />
-      </TouchableOpacity>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={() => {
+        setItems(item.items);
+        setTotalAmount(item.totalAmount);
+        actionSheetRef.current?.setModalVisible();
+      }}
+      style={styles.listCont}>
       <Text style={{fontSize: 15, marginBottom: 10}}>
         Customer Name: {item.customerDetails.name}
       </Text>
@@ -57,7 +54,7 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
       <Text style={{marginBottom: 10}}>Order id: {item._id} </Text>
       {item.upiPaid && (
         <View style={styles.upi}>
-          <Text style={styles.upiText}>Upi Paid</Text>
+          <Text style={styles.upiText}>UPI Paid</Text>
         </View>
       )}
       <Text
@@ -67,7 +64,7 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
       <View
         style={[
           styles.ribbon,
-          {backgroundColor: item.cancelled ? '#FC2424' : '#11C866' },
+          {backgroundColor: item.cancelled ? '#FC2424' : '#11C866'},
         ]}>
         {item.cancelled ? (
           <Text style={styles.ribbonText}>Cancelled</Text>
@@ -75,7 +72,7 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
           <Text style={styles.ribbonText}>Completed</Text>
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   const renderItemList = ({item}) => (
@@ -99,7 +96,8 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
                 data={completedOrders}
                 keyExtractor={(item) => item._id}
                 renderItem={renderOrderList}
-              />
+                showsVerticalScrollIndicator={false}
+                />
               <ActionSheet
                 ref={actionSheetRef}
                 gestureEnabled
@@ -119,6 +117,7 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
                     data={items}
                     keyExtractor={(item) => item.productName}
                     renderItem={renderItemList}
+                    showsVerticalScrollIndicator={false}
                     ref={flatlistRef}
                     nestedScrollEnabled
                     onScrollEndDrag={() =>
@@ -238,6 +237,6 @@ const styles = StyleSheet.create({
   },
   img: {
     width: 250,
-    height: 250
-  }
+    height: 250,
+  },
 });

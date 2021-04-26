@@ -11,7 +11,10 @@ import {
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {authLoadingAction} from '../../../Redux/Actions/authAction';
-import {addShopDetailDispatch} from '../../../Redux/Actions/shopAction';
+import {
+  addShopDetailDispatch,
+  updateShopDataDispatch,
+} from '../../../Redux/Actions/shopAction';
 import {utilStyles} from '../../../utils/styles';
 import * as Animatable from 'react-native-animatable';
 import {MyTextInput} from '../../../utils/myElements';
@@ -27,6 +30,7 @@ const ShopDetails = ({
   shop,
   addShopDetailDispatch,
   authLoadingAction,
+  updateShopDataDispatch,
 }) => {
   const [shopName, setShopName] = useState('');
   const [category, setCategory] = useState('');
@@ -41,20 +45,6 @@ const ShopDetails = ({
     userData: {_id},
   } = auth;
 
-  // useEffect(() => {
-  //   setTimeout(() => setErrorsAction(null), 5000);
-  // }, [errors]);
-
-  // shopName,
-  // city,
-  // _id,
-  // address,
-  // category,
-  // pincode,
-  // shopOwnerId,
-  // shopCoordinate,
-  // shopReviews,
-
   useEffect(() => {
     if (shop.shopData) {
       setShopName(shop.shopData.shopName.toString());
@@ -62,9 +52,9 @@ const ShopDetails = ({
       setAddress(shop.shopData.address.toString());
       setCity(shop.shopData.city.toString());
       setPincode(shop.shopData.pincode.toString());
-      // if (shop.shopDate.upiId) {
-      //   setUpi(shop.shopData.upiId.toString());
-      // }
+      if (shop.shopData.upiId) {
+        setUpi(shop.shopData.upiId.toString());
+      }
     }
   }, []);
 
@@ -79,7 +69,26 @@ const ShopDetails = ({
       showFlashMessage('Fields are empty', 'danger');
     } else {
       const data =
-        upi.length === 0
+        shop.shopData && upi.length === 0
+          ? {
+              shopId: shop.shopData._id,
+              shopName,
+              category,
+              address,
+              city,
+              pincode,
+            }
+          : shop.shopData && upi.length > 0
+          ? {
+              shopId: shop.shopData._id,
+              shopName,
+              category,
+              address,
+              city,
+              pincode,
+              upiId: upi,
+            }
+          : !shop.shopData && upi.length === 0
           ? {
               shopOwnerId: _id,
               shopName,
@@ -95,9 +104,17 @@ const ShopDetails = ({
               address,
               city,
               pincode,
-              upi,
+              upiId: upi,
             };
-      authLoadingAction(true);
+      apiCall(data);
+    }
+  };
+
+  const apiCall = (data) => {
+    authLoadingAction(true);
+    if (shop.shopData) {
+      updateShopDataDispatch(data);
+    } else {
       addShopDetailDispatch(data);
     }
   };
@@ -118,30 +135,30 @@ const ShopDetails = ({
               <MyTextInput
                 value={shopName}
                 onChangeText={(text) => setShopName(text)}
-                placeholder="Enter Shop Name"
+                placeholder="Enter Shop Name*"
               />
               <MyTextInput
                 value={category}
                 onChangeText={(text) => setCategory(text)}
-                placeholder="Pick Shop Category"
+                placeholder="Pick Shop Category*"
               />
               <MyTextInput
                 value={address}
                 onChangeText={(text) => setAddress(text)}
-                placeholder="Enter Your Shop Address"
+                placeholder="Enter Your Shop Address*"
                 multiline={true}
               />
               <MyTextInput
                 value={city}
                 onChangeText={(text) => setCity(text)}
-                placeholder="Enter City"
+                placeholder="Enter City*"
               />
               <MyTextInput
                 value={pincode}
                 maxLength={6}
                 keyboardType="number-pad"
                 onChangeText={(text) => setPincode(text)}
-                placeholder="Enter Area Pincode"
+                placeholder="Enter Area Pincode*"
               />
               <MyTextInput
                 value={upi}
@@ -173,6 +190,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       addShopDetailDispatch,
       authLoadingAction,
+      updateShopDataDispatch,
     },
     dispatch,
   );

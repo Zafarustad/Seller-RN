@@ -19,6 +19,7 @@ import ActionSheet from 'react-native-actions-sheet';
 import NoDataImg from '../../assests/images/no-data1.png';
 import UnverifiedImg from '../../assests/images/unverified.png';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import {utilStyles} from '../../utils/styles';
 
 const {height, width} = Dimensions.get('screen');
 
@@ -34,28 +35,26 @@ const OrderPending = ({
   const [totalAmount, setTotalAmount] = useState(null);
   const flatlistRef = useRef(null);
 
-  // console.log('shopData', shop.shopData);
+  // console.log('shopDatasdishdbhs', shop.shopData);
 
   useEffect(() => {
     getPendingOrderDataDispatch(shop.shopData._id);
     getShopDataDispatch(shop.shopData._id);
   }, []);
 
+
   const {openOrders} = order;
-  console.log('openOrders', openOrders);
+  // console.log('openOrders', openOrders);
 
   const renderOrderList = ({item}) => (
-    <View style={styles.listCont}>
-      <TouchableOpacity
-        onPress={() => {
-          setItems(item.items);
-          setTotalAmount(item.totalAmount);
-          actionSheetRef.current?.setModalVisible();
-        }}
-        activeOpacity={0.7}
-        style={{position: 'absolute', right: 10, top: 25, zIndex: 999}}>
-        <MaterialIcon name="open-in-new" color="#000000" size={22} />
-      </TouchableOpacity>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={() => {
+        setItems(item.items);
+        setTotalAmount(item.totalAmount);
+        actionSheetRef.current?.setModalVisible();
+      }}
+      style={styles.listCont}>
       <Text style={{fontSize: 15, marginBottom: 10}}>
         Customer Name: {item.customerDetails.name}
       </Text>
@@ -65,7 +64,7 @@ const OrderPending = ({
       <Text style={{marginBottom: 10}}>Order id: {item._id} </Text>
       {item.upiPaid && (
         <View style={styles.upi}>
-          <Text style={styles.upiText}>Upi Paid</Text>
+          <Text style={styles.upiText}>UPI Paid</Text>
         </View>
       )}
       <Text style={styles.date}>
@@ -74,7 +73,7 @@ const OrderPending = ({
       <View style={styles.ribbon}>
         <Text style={styles.ribbonText}>Open</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   const renderItemList = ({item}) => (
@@ -98,6 +97,7 @@ const OrderPending = ({
                 data={openOrders}
                 keyExtractor={(item) => item._id}
                 renderItem={renderOrderList}
+                showsVerticalScrollIndicator={false}
               />
               <ActionSheet
                 ref={actionSheetRef}
@@ -112,6 +112,7 @@ const OrderPending = ({
                     data={items}
                     keyExtractor={(item) => item.productName}
                     renderItem={renderItemList}
+                    showsVerticalScrollIndicator={false}
                     ref={flatlistRef}
                     nestedScrollEnabled
                     onScrollEndDrag={() =>
@@ -124,6 +125,9 @@ const OrderPending = ({
                       actionSheetRef.current?.handleChildScrollEnd()
                     }
                   />
+                  <TouchableOpacity activeOpacity={0.7} style={[utilStyles.button1, {marginBottom: 20}]}>
+                    <Text style={{fontSize: 17, color: '#FFF'}}>Order Delivered</Text>
+                  </TouchableOpacity>
                 </View>
               </ActionSheet>
             </View>

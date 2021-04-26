@@ -13,8 +13,12 @@ import {bindActionCreators} from 'redux';
 import SInfo from 'react-native-sensitive-info';
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePickerModal from './ImagePickerModal';
-import {axiosInstance} from '../../utils/utils';
-import {isAuthenticatedAction} from '../../Redux/Actions/authAction';
+import {axiosInstance, showFlashMessage} from '../../utils/utils';
+import {
+  authLoadingAction,
+  isAuthenticatedAction,
+} from '../../Redux/Actions/authAction';
+import {updateShopImageDispatch} from '../../Redux/Actions/shopAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ShopImg from '../../assests/images/shop.png';
 import ActionSheet from 'react-native-actions-sheet';
@@ -22,15 +26,26 @@ import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import {utilStyles} from '../../utils/styles';
+import Loader from '../Custom/Loader';
 
 const {height, width} = Dimensions.get('screen');
 
 const actionSheetRef = createRef();
 
-const MyShop = ({shop, isAuthenticatedAction, navigation}) => {
-  const [shopImage, setShopImage] = useState(null);
+const MyShop = ({
+  shop,
+  auth,
+  isAuthenticatedAction,
+  navigation,
+  updateShopImageDispatch,
+  authLoadingAction,
+}) => {
+  const [image, setImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const {shopData} = shop;
+  const {authLoading} = auth;
+
+  console.log('shopData', shopData)
 
   const logout = async () => {
     isAuthenticatedAction(false);
@@ -40,6 +55,17 @@ const MyShop = ({shop, isAuthenticatedAction, navigation}) => {
     });
     await AsyncStorage.clear();
     delete axiosInstance.defaults.headers.common['Authorization'];
+  };
+
+  const uploadImage = () => {
+    const data = {shopImage: image, shopId: shopData._id};
+    if (!image) {
+      showFlashMessage('Upload an Image', 'error');
+    } else {
+      authLoadingAction(true);
+      updateShopImageDispatch(data);
+      setImage(null);
+    }
   };
 
   return (
@@ -59,7 +85,15 @@ const MyShop = ({shop, isAuthenticatedAction, navigation}) => {
           </TouchableOpacity>
           <View>
             <Image
-              source={!shopImage ? ShopImg : {uri: shopImage}}
+              source={
+                !image && shopData.shopImage
+                  ? {uri: `data:image/png;base64,${shopData.shopImage}`}
+                  : image && !shopData.shopImage
+                  ? {uri: `data:image/png;base64,${image}`}
+                  : image && shopData.shopImage
+                  ? {uri: `data:image/png;base64,${image}`}
+                  : ShopImg
+              }
               style={styles.img}
             />
           </View>
@@ -73,6 +107,11 @@ const MyShop = ({shop, isAuthenticatedAction, navigation}) => {
           <Text style={styles.text}>City: {shopData.city}</Text>
           <Text style={styles.text}>Pin Code: {shopData.pincode}</Text>
           <Text style={styles.text}>GSTIN: {shopData.gstin}</Text>
+          {shopData.upiId ? (
+            <Text style={styles.text}>UPI: {shopData.upiId}</Text>
+          ) : (
+            <Text style={styles.text}>UPI: --</Text>
+          )}
         </View>
         <TouchableOpacity
           activeOpacity={0.8}
@@ -97,9 +136,9 @@ const MyShop = ({shop, isAuthenticatedAction, navigation}) => {
           />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
-        {shopImage && (
+        {image && (
           <TouchableOpacity
-            //onPress={() => onSubmit()}
+            onPress={() => uploadImage()}
             activeOpacity={0.75}
             style={[utilStyles.button1, {marginTop: 30}]}>
             <Text style={{fontSize: 17, color: '#FFF'}}>Update Image</Text>
@@ -162,18 +201,21 @@ const MyShop = ({shop, isAuthenticatedAction, navigation}) => {
       <ImagePickerModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        setImage={setShopImage}
+        setImage={setImage}
       />
+      {authLoading && <Loader />}
     </LinearGradient>
   );
 };
 
-const mapStateToProps = ({shop}) => ({shop});
+const mapStateToProps = ({auth, shop}) => ({auth, shop});
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       isAuthenticatedAction,
+      updateShopImageDispatch,
+      authLoadingAction,
     },
     dispatch,
   );
@@ -219,7 +261,7 @@ const styles = StyleSheet.create({
   bottomCont: {
     backgroundColor: '#FFF',
     width: width,
-    height: height * 0.2,
+    height: height * 0.25,
     marginTop: 20,
     elevation: 10,
     borderBottomWidth: 0.4,

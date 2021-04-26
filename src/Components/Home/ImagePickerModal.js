@@ -89,7 +89,7 @@ const ImagePickerModal = ({modalVisible, setModalVisible, setImage}) => {
     ImagePicker.launchCamera(options, (response) => {
       if (!response.didCancel && !response.errorMessage) {
         setModalVisible(false);
-        setImage(response.uri);
+        setImage(response.base64);
       }
     });
   };
@@ -98,7 +98,7 @@ const ImagePickerModal = ({modalVisible, setModalVisible, setImage}) => {
     ImagePicker.launchImageLibrary(options, (response) => {
       if (!response.didCancel && !response.errorMessage) {
         setModalVisible(false);
-        setImage(response.uri);
+        setImage(response.base64);
       }
     });
   };

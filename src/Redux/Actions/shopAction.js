@@ -120,3 +120,31 @@ export const deleteInventoryProductDispatch = (shopId, productId) => async (
     showFlashMessage('Something went wrong', 'danger');
   }
 };
+
+export const updateShopDataDispatch = (data) => async (dispatch) => {
+  try {
+    const res = await axiosInstance.put('/seller/shop', data);
+    storeData('shopData', res.data);
+    dispatch(setShopDataAction(res.data));
+    showFlashMessage('Shop data updated successfully!', 'success');
+    dispatch(authLoadingAction(false));
+  } catch (e) {
+    console.log('error1', e.response.data);
+    dispatch(authLoadingAction(false));
+    showFlashMessage('Something went wrong', 'danger');
+  }
+};
+
+export const updateShopImageDispatch = (data) => async (dispatch) => {
+  try {
+    const res = await axiosInstance.put('/seller/shopImage', data);
+    storeData('shopData', res.data);
+    dispatch(setShopDataAction(res.data));
+    showFlashMessage('Shop data updated successfully!', 'success');
+    dispatch(authLoadingAction(false));
+  } catch (e) {
+    console.log('error2', e.response.data);
+    dispatch(authLoadingAction(false));
+    showFlashMessage('Something went wrong', 'danger');
+  }
+};
