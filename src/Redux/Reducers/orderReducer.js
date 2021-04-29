@@ -1,4 +1,9 @@
-import {PENDING_ORDER_DATA, COMPLETED_ORDER_DATA, CLEAR_ORDER_DATA} from '../Actions/orderAction';
+import {
+  PENDING_ORDER_DATA,
+  COMPLETED_ORDER_DATA,
+  CLEAR_ORDER_DATA,
+  SET_ORDER_COMPLETE,
+} from '../Actions/orderAction';
 
 const initialState = {
   openOrders: null,
@@ -20,12 +25,22 @@ const orderReducer = (state = initialState, action) => {
       };
     }
 
+    case SET_ORDER_COMPLETE: {
+      const filteredArray = state.openOrders.filter(
+        (order) => order._id !== action.payload._id,
+      );
+      return {
+        ...state,
+        openOrders: filteredArray,
+      };
+    }
+
     case CLEAR_ORDER_DATA: {
       return {
         ...state,
         openOrders: null,
-        completedOrders: null
-      }
+        completedOrders: null,
+      };
     }
     default:
       return state;

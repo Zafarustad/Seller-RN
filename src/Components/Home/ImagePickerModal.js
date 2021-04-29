@@ -11,6 +11,7 @@ import {
   Linking,
 } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
+import {showFlashMessage} from '../../utils/utils';
 
 let options = {
   mediaType: 'photo',
@@ -87,9 +88,20 @@ const ImagePickerModal = ({modalVisible, setModalVisible, setImage}) => {
 
   const openCamera = () => {
     ImagePicker.launchCamera(options, (response) => {
+      console.log('response', response);
       if (!response.didCancel && !response.errorMessage) {
-        setModalVisible(false);
-        setImage(response.base64);
+        if (
+          response.type === 'image/jpg' ||
+          response.type === 'image/jpeg' ||
+          response.type === 'image/png'
+        ) {
+          setModalVisible(false);
+          setImage(response.base64);
+        } else {
+          console.log('here ehhas');
+          setModalVisible(false);
+          showFlashMessage('Unsupported File Type!', 'danger');
+        }
       }
     });
   };
@@ -97,8 +109,18 @@ const ImagePickerModal = ({modalVisible, setModalVisible, setImage}) => {
   const openLibrary = () => {
     ImagePicker.launchImageLibrary(options, (response) => {
       if (!response.didCancel && !response.errorMessage) {
-        setModalVisible(false);
-        setImage(response.base64);
+        if (
+          response.type === 'application/pdf' ||
+          response.type === 'image/jpg' ||
+          response.type === 'image/jpeg' ||
+          response.type === 'image/png'
+        ) {
+          setModalVisible(false);
+          setImage(response.base64);
+        } else {
+          setModalVisible(false);
+          showFlashMessage('Unsupported File Type!', 'danger');
+        }
       }
     });
   };

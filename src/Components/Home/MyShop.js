@@ -45,7 +45,7 @@ const MyShop = ({
   const {shopData} = shop;
   const {authLoading} = auth;
 
-  console.log('shopData', shopData)
+  // console.log('shopData', shopData)
 
   const logout = async () => {
     isAuthenticatedAction(false);
@@ -122,7 +122,7 @@ const MyShop = ({
           }
           style={styles.mapBtn}>
           <Feather name="map" size={17} color="#000" style={{marginLeft: 10}} />
-          <Text style={{fontSize: 17, marginLeft: 10}}>Check on map</Text>
+          <Text style={styles.text2}>Check on map</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
@@ -134,7 +134,7 @@ const MyShop = ({
             color="red"
             style={{marginLeft: 10}}
           />
-          <Text style={styles.logoutText}>Logout</Text>
+          <Text style={styles.text2}>Logout</Text>
         </TouchableOpacity>
         {image && (
           <TouchableOpacity
@@ -148,7 +148,7 @@ const MyShop = ({
       <ActionSheet ref={actionSheetRef} gestureEnabled indicatorColor="#000">
         <View
           style={{
-            height: height * 0.4,
+            height: height * 0.5,
             alignItems: 'center',
           }}>
           <TouchableOpacity
@@ -162,13 +162,13 @@ const MyShop = ({
               name="edit"
               size={17}
               color="#000"
-              style={{marginLeft: 10}}
+              style={styles.actionSheetIcon}
             />
-            <Text style={{fontSize: 17, marginLeft: 10}}>Change Shop Info</Text>
+            <Text style={styles.text2}>Change Shop Info</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              actionSheetRef.current?.setModalVisible();
+              actionSheetRef.current?.hide();
               navigation.navigate('GoogleMap');
             }}
             activeOpacity={0.5}
@@ -177,13 +177,13 @@ const MyShop = ({
               name="edit"
               size={17}
               color="#000"
-              style={{marginLeft: 10}}
+              style={styles.actionSheetIcon}
             />
-            <Text style={styles.logoutText}>Change Shop Location</Text>
+            <Text style={styles.text2}>Change Shop Location</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              actionSheetRef.current?.setModalVisible();
+              actionSheetRef.current?.hide();
               setModalVisible(true);
             }}
             activeOpacity={0.5}
@@ -192,9 +192,24 @@ const MyShop = ({
               name="edit"
               size={17}
               color="#000"
-              style={{marginLeft: 10}}
+              style={styles.actionSheetIcon}
             />
-            <Text style={styles.logoutText}>Upload/Change Shop Image</Text>
+            <Text style={styles.text2}>Upload/Change Shop Image</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              actionSheetRef.current?.hide();
+              navigation.navigate('Contact');
+            }}
+            activeOpacity={0.5}
+            style={styles.actionSheetBtn}>
+            <Feather
+              name="message-square"
+              size={17}
+              color="#000"
+              style={styles.actionSheetIcon}
+            />
+            <Text style={styles.text2}>Contact Us</Text>
           </TouchableOpacity>
         </View>
       </ActionSheet>
@@ -286,12 +301,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     width: width,
     height: height * 0.08,
-    // marginTop: 20,
     elevation: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  logoutText: {
+  text2: {
     fontSize: 17,
     marginLeft: 10,
   },
@@ -304,5 +318,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.4,
     borderBottomColor: '#AAA',
     marginTop: 20,
+  },
+  actionSheetIcon: {
+    marginLeft: 10,
+    marginRight: 20,
   },
 });

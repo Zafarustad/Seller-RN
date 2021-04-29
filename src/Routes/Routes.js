@@ -25,6 +25,7 @@ import AddProduct from '../Components/Home/Forms/AddProduct';
 import store from '../Redux/Reducers/store';
 import {clearShopDataAction} from '../Redux/Actions/shopAction';
 import {clearOrderDataAction} from '../Redux/Actions/orderAction';
+import Contact from '../Components/Home/ContactUs';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -138,6 +139,13 @@ const Routes = ({auth}) => {
       <Stack.Screen
         name="GoogleMap"
         component={GoogleMap}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
+      />
+      <Stack.Screen
+        name="Contact"
+        component={Contact}
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}

@@ -12,51 +12,80 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {getPendingOrderDataDispatch} from '../../Redux/Actions/orderAction';
 import {getShopDataDispatch} from '../../Redux/Actions/shopAction';
+import {setOrderCompleteDispatch} from '../../Redux/Actions/orderAction';
 import LottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import dayjs from 'dayjs';
 import ActionSheet from 'react-native-actions-sheet';
 import NoDataImg from '../../assests/images/no-data1.png';
 import UnverifiedImg from '../../assests/images/unverified.png';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {utilStyles} from '../../utils/styles';
+import {authLoadingAction} from '../../Redux/Actions/authAction';
+import Loader from '../Custom/Loader';
+import {MyTextInput} from '../../utils/myElements';
 
 const {height, width} = Dimensions.get('screen');
 
 const actionSheetRef = createRef();
 
 const OrderPending = ({
+  auth,
   shop,
   order,
   getPendingOrderDataDispatch,
+  navigation,
   getShopDataDispatch,
+  setOrderCompleteDispatch,
 }) => {
   const [items, setItems] = useState([]);
+  const [searchfield, setSearchfield] = useState('');
+  const [orderData, setOrderData] = useState(null);
   const [totalAmount, setTotalAmount] = useState(null);
   const flatlistRef = useRef(null);
 
-  // console.log('shopDatasdishdbhs', shop.shopData);
+  const {authLoading} = auth;
+
+  // console.log('orderData', orderData);
 
   useEffect(() => {
-    getPendingOrderDataDispatch(shop.shopData._id);
-    getShopDataDispatch(shop.shopData._id);
+    navigation.addListener('focus', () => {
+      getPendingOrderDataDispatch(shop.shopData._id);
+      getShopDataDispatch(shop.shopData._id);
+    });
   }, []);
-
 
   const {openOrders} = order;
   // console.log('openOrders', openOrders);
+
+  const orderCompleted = () => {
+    authLoadingAction(true);
+    setOrderCompleteDispatch(orderData._id);
+    actionSheetRef.current?.hide();
+  };
+
+  const filteredArray =
+    openOrders &&
+    openOrders.filter((order) =>
+      order.customerDetails.name
+        .toLowerCase()
+        .includes(searchfield.toLowerCase()),
+    );
 
   const renderOrderList = ({item}) => (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => {
         setItems(item.items);
+        setOrderData(item);
         setTotalAmount(item.totalAmount);
         actionSheetRef.current?.setModalVisible();
       }}
       style={styles.listCont}>
       <Text style={{fontSize: 15, marginBottom: 10}}>
         Customer Name: {item.customerDetails.name}
+      </Text>
+      <Text style={{fontSize: 15, marginBottom: 10}}>
+        Items: {item.items.length}
       </Text>
       <Text style={{marginBottom: 10}}>
         Order Total: &#8377;{item.totalAmount}{' '}
@@ -92,9 +121,21 @@ const OrderPending = ({
       {openOrders ? (
         shop.shopData.verified ? (
           openOrders.length > 0 ? (
-            <View style={{alignItems: 'center', marginTop: 30}}>
+            <View style={{alignItems: 'center', marginTop: 10}}>
+              <MyTextInput
+                value={searchfield}
+                onChangeText={(text) => setSearchfield(text)}
+                style={{
+                  width: width * 0.9,
+                  backgroundColor: '#FFF',
+                  elevation: 5,
+                  borderWidth: 0,
+                  marginBottom: 10,
+                }}
+                placeholder="Enter Customer Name To Filter Orders"
+              />
               <FlatList
-                data={openOrders}
+                data={filteredArray}
                 keyExtractor={(item) => item._id}
                 renderItem={renderOrderList}
                 showsVerticalScrollIndicator={false}
@@ -125,8 +166,13 @@ const OrderPending = ({
                       actionSheetRef.current?.handleChildScrollEnd()
                     }
                   />
-                  <TouchableOpacity activeOpacity={0.7} style={[utilStyles.button1, {marginBottom: 20}]}>
-                    <Text style={{fontSize: 17, color: '#FFF'}}>Order Delivered</Text>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => orderCompleted()}
+                    style={[utilStyles.button1, {marginBottom: 20}]}>
+                    <Text style={{fontSize: 17, color: '#FFF'}}>
+                      Order Delivered
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </ActionSheet>
@@ -141,8 +187,11 @@ const OrderPending = ({
         ) : (
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{fontSize: 16}}>Submit Shop Documents</Text>
-            <Text style={{fontSize: 16}}>To Be Able To Recieve Orders</Text>
+            <Text style={{fontSize: 16}}>
+              We will contact you for shop verification
+            </Text>
+            <Text style={{fontSize: 16}}>You will able to recieve orders</Text>
+            <Text style={{fontSize: 16}}>after shop verification</Text>
             <Image source={UnverifiedImg} style={styles.img} />
           </View>
         )
@@ -157,17 +206,19 @@ const OrderPending = ({
           <Text style={{fontSize: 16}}>We are getting your orders...</Text>
         </View>
       )}
+      {authLoading && <Loader />}
     </LinearGradient>
   );
 };
 
-const mapStateToProps = ({shop, order}) => ({shop, order});
+const mapStateToProps = ({auth, shop, order}) => ({auth, shop, order});
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       getPendingOrderDataDispatch,
       getShopDataDispatch,
+      setOrderCompleteDispatch,
     },
     dispatch,
   );

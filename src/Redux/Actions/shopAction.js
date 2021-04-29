@@ -45,7 +45,7 @@ export const addShopDetailDispatch = (data) => async (dispatch) => {
     storeData('shopData', res.data.shopData);
     dispatch(setUserDetailsAction(res.data.userData));
     dispatch(setShopDataAction(res.data.shopData));
-    showFlashMessage('Shop data updated successfully!', 'success');
+    showFlashMessage('Shop Data Added!', 'success');
     dispatch(authLoadingAction(false));
   } catch (e) {
     console.log(e.response.data);
@@ -60,7 +60,7 @@ export const addShopCoordinateDispatch = (data) => async (dispatch) => {
     storeData('userData', res.data.userData);
     dispatch(setUserDetailsAction(res.data.userData));
     dispatch(setShopDataAction(res.data.shopData));
-    showFlashMessage('Shop coordinateds added successfully!', 'success');
+    showFlashMessage('Shop Coordinateds Added!', 'success');
     dispatch(authLoadingAction(false));
   } catch (e) {
     console.log(e.response.data);
@@ -85,7 +85,7 @@ export const addProductToInventoryDispatch = (data) => async (dispatch) => {
     const res = await axiosInstance.post('/seller/shop/product', data);
     dispatch(addProductToInventoryAction(res.data));
     dispatch(authLoadingAction(false));
-    showFlashMessage('Product added successfully', 'success');
+    showFlashMessage('Product added!', 'success');
   } catch (e) {
     console.log(e.response.data);
     dispatch(authLoadingAction(false));
@@ -126,7 +126,7 @@ export const updateShopDataDispatch = (data) => async (dispatch) => {
     const res = await axiosInstance.put('/seller/shop', data);
     storeData('shopData', res.data);
     dispatch(setShopDataAction(res.data));
-    showFlashMessage('Shop data updated successfully!', 'success');
+    showFlashMessage('Shop Data Updated!', 'success');
     dispatch(authLoadingAction(false));
   } catch (e) {
     console.log('error1', e.response.data);
@@ -140,7 +140,7 @@ export const updateShopImageDispatch = (data) => async (dispatch) => {
     const res = await axiosInstance.put('/seller/shopImage', data);
     storeData('shopData', res.data);
     dispatch(setShopDataAction(res.data));
-    showFlashMessage('Shop data updated successfully!', 'success');
+    showFlashMessage('Shop Image updated!', 'success');
     dispatch(authLoadingAction(false));
   } catch (e) {
     console.log('error2', e.response.data);

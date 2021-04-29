@@ -17,19 +17,26 @@ import LinearGradient from 'react-native-linear-gradient';
 import dayjs from 'dayjs';
 import NoDataImg from '../../assests/images/no-data1.png';
 import UnverifiedImg from '../../assests/images/unverified.png';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-
+import {MyTextInput} from '../../utils/myElements';
 const {height, width} = Dimensions.get('screen');
 
 const actionSheetRef = createRef();
 
-const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
+const OrderCompleted = ({
+  shop,
+  order,
+  getCompletedOrderDataDispatch,
+  navigation,
+}) => {
   const [items, setItems] = useState([]);
+  const [searchfield, setSearchfield] = useState('');
   const [totalAmount, setTotalAmount] = useState(null);
   const flatlistRef = useRef(null);
 
   useEffect(() => {
-    getCompletedOrderDataDispatch(shop.shopData._id);
+    navigation.addListener('focus', () => {
+      getCompletedOrderDataDispatch(shop.shopData._id);
+    });
   }, []);
 
   const {completedOrders} = order;
@@ -47,6 +54,9 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
       style={styles.listCont}>
       <Text style={{fontSize: 15, marginBottom: 10}}>
         Customer Name: {item.customerDetails.name}
+      </Text>
+      <Text style={{fontSize: 15, marginBottom: 10}}>
+        Items: {item.items.length}
       </Text>
       <Text style={{marginBottom: 10}}>
         Order Total: &#8377;{item.totalAmount}{' '}
@@ -83,6 +93,14 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
     </View>
   );
 
+  const filteredArray =
+    completedOrders &&
+    completedOrders.filter((order) =>
+      order.customerDetails.name
+        .toLowerCase()
+        .includes(searchfield.toLowerCase()),
+    );
+
   return (
     <LinearGradient
       locations={[0.3, 0.9, 1]}
@@ -91,13 +109,25 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
       {completedOrders ? (
         shop.shopData.verified ? (
           completedOrders.length > 0 ? (
-            <View style={{alignItems: 'center', marginTop: 30}}>
+            <View style={{alignItems: 'center', marginTop: 10}}>
+              <MyTextInput
+                value={searchfield}
+                onChangeText={(text) => setSearchfield(text)}
+                style={{
+                  width: width * 0.9,
+                  backgroundColor: '#FFF',
+                  elevation: 5,
+                  borderWidth: 0,
+                  marginBottom: 10
+                }}
+                placeholder="Enter Customer Name To Filter Orders"
+              />
               <FlatList
-                data={completedOrders}
+                data={filteredArray}
                 keyExtractor={(item) => item._id}
                 renderItem={renderOrderList}
                 showsVerticalScrollIndicator={false}
-                />
+              />
               <ActionSheet
                 ref={actionSheetRef}
                 gestureEnabled
@@ -143,8 +173,11 @@ const OrderCompleted = ({shop, order, getCompletedOrderDataDispatch}) => {
         ) : (
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{fontSize: 16}}>Submit Shop Documents</Text>
-            <Text style={{fontSize: 16}}>To Be Able To Recieve Orders</Text>
+           <Text style={{fontSize: 16}}>
+              We will contact you for shop verification
+            </Text>
+            <Text style={{fontSize: 16}}>You will able to recieve orders</Text>
+            <Text style={{fontSize: 16}}>after shop verification</Text>
             <Image source={UnverifiedImg} style={styles.img} />
           </View>
         )
