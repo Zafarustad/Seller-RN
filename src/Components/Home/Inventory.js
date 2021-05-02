@@ -14,6 +14,7 @@ import {
   deleteInventoryProductDispatch,
   getShopInventoryDispatch,
   toggleLoadingAction,
+  changeProductAvailabilityDispatch,
 } from '../../Redux/Actions/shopAction';
 import LinearGradient from 'react-native-linear-gradient';
 import LottieView from 'lottie-react-native';
@@ -22,6 +23,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Loader from '../Custom/Loader';
+import {MyTextInput} from '../../utils/myElements';
 
 const {width, height} = Dimensions.get('window');
 
@@ -29,13 +31,14 @@ const actionSheetRef = createRef();
 
 const Inventory = ({
   shop,
-  auth,
   navigation,
   deleteInventoryProductDispatch,
   toggleLoadingAction,
   getShopInventoryDispatch,
+  changeProductAvailabilityDispatch,
 }) => {
   const [productId, setProductId] = useState(null);
+  const [searchfield, setSearchfield] = useState('');
 
   const {
     shopData: {_id, inventory},
@@ -58,6 +61,22 @@ const Inventory = ({
       actionSheetRef.current?.setModalVisible();
     }
   };
+
+  const changeItemStock = (item) => {
+    const data = {
+      productId: item._id,
+      value: item.inStock,
+      shopId: _id,
+    };
+    toggleLoadingAction(true);
+    changeProductAvailabilityDispatch(data);
+  };
+
+  const filteredArray =
+    inventory &&
+    inventory.filter((item) =>
+      item.productName.toLowerCase().includes(searchfield.toLowerCase()),
+    );
 
   const renderInventory = ({item}) => (
     <View style={styles.itemCont}>
@@ -87,7 +106,9 @@ const Inventory = ({
             trackColor={{false: '#767577', true: '#06BE4A'}}
             thumbColor={'#f4f3f4'}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={(value) => console.log(value)}
+            onValueChange={(value) => {
+              changeItemStock(item);
+            }}
             value={item.inStock}
           />
         </View>
@@ -111,11 +132,18 @@ const Inventory = ({
       style={styles.container}>
       {shop.shopData ? (
         inventory.length > 0 ? (
-          <View style={{marginBottom: 70, marginTop: 20}}>
+          <View style={{marginTop: 10}}>
+            <MyTextInput
+              value={searchfield}
+              onChangeText={(text) => setSearchfield(text)}
+              style={styles.searchfield}
+              placeholder="Enter Product Name To Filter"
+            />
             <FlatList
-              data={inventory}
+              data={filteredArray}
               keyExtractor={(item) => item._id}
               renderItem={renderInventory}
+              showsVerticalScrollIndicator={false}
             />
           </View>
         ) : (
@@ -167,7 +195,7 @@ const Inventory = ({
   );
 };
 
-const mapStateToProps = ({shop, auth}) => ({shop, auth});
+const mapStateToProps = ({shop}) => ({shop});
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
@@ -175,6 +203,7 @@ const mapDispatchToProps = (dispatch) =>
       deleteInventoryProductDispatch,
       toggleLoadingAction,
       getShopInventoryDispatch,
+      changeProductAvailabilityDispatch,
     },
     dispatch,
   );
@@ -206,6 +235,13 @@ const styles = StyleSheet.create({
     elevation: 6,
     borderRadius: 10,
     backgroundColor: '#fff',
+    marginBottom: 10,
+  },
+  searchfield: {
+    width: width * 0.9,
+    backgroundColor: '#FFF',
+    elevation: 5,
+    borderWidth: 0,
     marginBottom: 10,
   },
   row: {

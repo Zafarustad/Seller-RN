@@ -125,14 +125,8 @@ const OrderPending = ({
               <MyTextInput
                 value={searchfield}
                 onChangeText={(text) => setSearchfield(text)}
-                style={{
-                  width: width * 0.9,
-                  backgroundColor: '#FFF',
-                  elevation: 5,
-                  borderWidth: 0,
-                  marginBottom: 10,
-                }}
-                placeholder="Enter Customer Name To Filter Orders"
+                style={styles.searchfield}
+                placeholder="Enter Customer Name To Filter"
               />
               <FlatList
                 data={filteredArray}
@@ -253,6 +247,13 @@ const styles = StyleSheet.create({
     right: 10,
     bottom: 5,
     color: '#AAAAAA',
+  },
+  searchfield: {
+    width: width * 0.9,
+    backgroundColor: '#FFF',
+    elevation: 5,
+    borderWidth: 0,
+    marginBottom: 10
   },
   upi: {
     width: 70,

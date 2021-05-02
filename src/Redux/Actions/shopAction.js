@@ -6,6 +6,7 @@ export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 export const CLEAR_SHOP_DATA = 'CLEAR_SHOP_DATA';
 export const GET_SHOP_INVENTORY = 'GET_SHOP_INVENTORY';
 export const TOOGLE_LOADING = 'TOOGLE_LOADING';
+export const CHANGE_STOCK_AVAILIBILITY = 'CHANGE_STOCK_AVAILIBILITY';
 
 import {authLoadingAction, setUserDetailsAction} from './authAction';
 
@@ -35,7 +36,12 @@ export const clearShopDataAction = () => ({
 
 export const toggleLoadingAction = (data) => ({
   type: TOOGLE_LOADING,
-  payload: data
+  payload: data,
+});
+
+export const changeProductAvailabilityAction = (data) => ({
+  type: CHANGE_STOCK_AVAILIBILITY,
+  payload: data,
 });
 
 export const addShopDetailDispatch = (data) => async (dispatch) => {
@@ -143,8 +149,18 @@ export const updateShopImageDispatch = (data) => async (dispatch) => {
     showFlashMessage('Shop Image updated!', 'success');
     dispatch(authLoadingAction(false));
   } catch (e) {
-    console.log('error2', e.response.data);
     dispatch(authLoadingAction(false));
+    showFlashMessage('Something went wrong', 'danger');
+  }
+};
+
+export const changeProductAvailabilityDispatch = (data) => async (dispatch) => {
+  try {
+    dispatch(changeProductAvailabilityAction(data));
+    const res = await axiosInstance.put('/seller/inventory/availability', data);
+    dispatch(toggleLoadingAction(false));
+  } catch (e) {
+    dispatch(toggleLoadingAction(false));
     showFlashMessage('Something went wrong', 'danger');
   }
 };

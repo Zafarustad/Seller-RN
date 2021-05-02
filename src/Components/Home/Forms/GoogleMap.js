@@ -27,8 +27,6 @@ const GoogleMap = ({
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
 
-  // console.log(route);
-
   const {userData, authLoading} = auth;
   const {shopData} = shop;
 
@@ -45,29 +43,7 @@ const GoogleMap = ({
 
   return (
     <View style={styles.container}>
-      {!route || !route.params ? (
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={styles.map}
-          region={{
-            latitude: lat ? lat : 19.076,
-            longitude: lng ? lng : 72.8777,
-            latitudeDelta: 0.015 * 0.1,
-            longitudeDelta: 0.0121 * 0.1,
-          }}>
-          {lat && lng && (
-            <Marker
-              draggable={true}
-              coordinate={{latitude: lat, longitude: lng}}
-              onDragEnd={(e) => {
-                setLat(e.nativeEvent.coordinate.latitude);
-                setLng(e.nativeEvent.coordinate.longitude);
-              }}
-              isPreselected
-            />
-          )}
-        </MapView>
-      ) : route && route.params ? (
+      {route && route.params ? (
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -85,11 +61,31 @@ const GoogleMap = ({
             isPreselected
           />
         </MapView>
-      ) : null}
-      {!route || !route.params  && (
+      ) : (
         <>
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            style={styles.map}
+            region={{
+              latitude: lat ? lat : 19.076,
+              longitude: lng ? lng : 72.8777,
+              latitudeDelta: 0.015 * 0.1,
+              longitudeDelta: 0.0121 * 0.1,
+            }}>
+            {lat && lng && (
+              <Marker
+                draggable={true}
+                coordinate={{latitude: lat, longitude: lng}}
+                onDragEnd={(e) => {
+                  setLat(e.nativeEvent.coordinate.latitude);
+                  setLng(e.nativeEvent.coordinate.longitude);
+                }}
+                isPreselected
+              />
+            )}
+          </MapView>
           <GooglePlacesAutocomplete
-            placeholder="Search Your Shop"
+            placeholder="Search Your Shop Location"
             onPress={(data, details = null) => {
               const lat = details.geometry.location.lat;
               const lng = details.geometry.location.lng;

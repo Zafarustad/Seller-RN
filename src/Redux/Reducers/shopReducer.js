@@ -4,7 +4,8 @@ import {
   DELETE_PRODUCT,
   CLEAR_SHOP_DATA,
   GET_SHOP_INVENTORY,
-  TOOGLE_LOADING
+  TOOGLE_LOADING,
+  CHANGE_STOCK_AVAILIBILITY,
 } from '../Actions/shopAction';
 
 const initialState = {
@@ -38,6 +39,21 @@ const shopReducer = (state = initialState, action) => {
         shopData: {
           ...state.shopData,
           inventory: filteredArray,
+        },
+      };
+    }
+
+    case CHANGE_STOCK_AVAILIBILITY: {
+      const newArray = [...state.shopData.inventory];
+      const index = state.shopData.inventory.findIndex(
+        (product) => product._id === action.payload.productId,
+      );
+      newArray[index].inStock = !action.payload.value;
+      return {
+        ...state,
+        shopData: {
+          ...state.shopData,
+          inventory: newArray,
         },
       };
     }

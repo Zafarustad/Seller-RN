@@ -113,14 +113,8 @@ const OrderCompleted = ({
               <MyTextInput
                 value={searchfield}
                 onChangeText={(text) => setSearchfield(text)}
-                style={{
-                  width: width * 0.9,
-                  backgroundColor: '#FFF',
-                  elevation: 5,
-                  borderWidth: 0,
-                  marginBottom: 10
-                }}
-                placeholder="Enter Customer Name To Filter Orders"
+                style={styles.searchfield}
+                placeholder="Enter Customer Name To Filter"
               />
               <FlatList
                 data={filteredArray}
@@ -230,6 +224,13 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     padding: 15,
+  },
+  searchfield: {
+    width: width * 0.9,
+    backgroundColor: '#FFF',
+    elevation: 5,
+    borderWidth: 0,
+    marginBottom: 10
   },
   upi: {
     width: 70,
