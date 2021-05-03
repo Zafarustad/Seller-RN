@@ -1,4 +1,4 @@
-import {axiosInstance} from '../../utils/utils';
+import {axiosInstance, showFlashMessage} from '../../utils/utils';
 import {setJwtToken, storeData} from '../../utils/utils';
 import {setShopDataAction} from './shopAction';
 
@@ -42,9 +42,9 @@ export const userLoginDispatch = (data) => async (dispatch) => {
     dispatch(isAuthenticatedAction(true));
     dispatch(authLoadingAction(false));
   } catch (e) {
-    console.log('error:', e.response.data);
-    await dispatch(setErrorsAction(e.response.data));
+    // console.log('error:', e.response.data);
     dispatch(authLoadingAction(false));
+    showFlashMessage('Server Error', 'danger');
   }
 };
 
@@ -59,8 +59,8 @@ export const userRegisterDispatch = (data) => async (dispatch) => {
     dispatch(isAuthenticatedAction(true));
     dispatch(authLoadingAction(false));
   } catch (e) {
-    console.log('error:', e.response.data);
-    await dispatch(setErrorsAction(e.response.data));
+    // console.log('error:', e.response.data);
     dispatch(authLoadingAction(false));
+    showFlashMessage(e.response.data.error, 'danger');
   }
 };

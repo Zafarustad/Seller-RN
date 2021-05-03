@@ -21,6 +21,8 @@ import {MyTextInput} from '../../../utils/myElements';
 import LinearGradient from 'react-native-linear-gradient';
 import {axiosInstance, showFlashMessage} from '../../../utils/utils';
 import Loader from '../../Custom/Loader';
+import {Picker} from '@react-native-picker/picker';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
 const {height, width} = Dimensions.get('window');
 
@@ -38,6 +40,7 @@ const ShopDetails = ({
   const [city, setCity] = useState('');
   const [pincode, setPincode] = useState('');
   const [upi, setUpi] = useState('');
+  const [otherText, setOtherText] = useState(false);
 
   const {
     errors,
@@ -137,11 +140,55 @@ const ShopDetails = ({
                 onChangeText={(text) => setShopName(text)}
                 placeholder="Enter Shop Name*"
               />
-              <MyTextInput
-                value={category}
-                onChangeText={(text) => setCategory(text)}
-                placeholder="Pick Shop Category*"
-              />
+              {!otherText ? (
+                <Picker
+                  style={{width: width * 0.9, alignSelf: 'center'}}
+                  selectedValue={category}
+                  onValueChange={(value, index) => {
+                    if (value === 'Pick Shop Category') {
+                      setCategory('');
+                    } else if (value === 'Other') {
+                      setCategory('');
+                      setOtherText(true);
+                    } else {
+                      setCategory(value);
+                    }
+                  }}>
+                  <Picker.Item
+                    label="Pick Shop Category"
+                    value="Pick Shop Category"
+                  />
+                  <Picker.Item label="Grocery" value="Grocery" />
+                  <Picker.Item label="Electronics" value="Electronics" />
+                  <Picker.Item label="Clothing" value="Clothing" />
+                  <Picker.Item label="Baby & Kids" value="Baby & Kids" />
+                  <Picker.Item
+                    label="Home & Furniture"
+                    value="Home & Furniture"
+                  />
+                  <Picker.Item label="Medical Store" value="Medical Store" />
+                  <Picker.Item label="Other" value="Other" />
+                </Picker>
+              ) : (
+                <View>
+                  <Ionicon
+                    name="close"
+                    color="#000"
+                    onPress={() => {
+                      setCategory('');
+                      setOtherText(false);
+                    }}
+                    size={15}
+                    style={{position: 'absolute', right: 30, zIndex: 999}}
+                  />
+                  <MyTextInput
+                    value={category}
+                    style={{marginTop: 12}}
+                    onChangeText={(text) => setCategory(text)}
+                    placeholder="Enter Shop Category*"
+                  />
+                </View>
+              )}
               <MyTextInput
                 value={address}
                 onChangeText={(text) => setAddress(text)}
