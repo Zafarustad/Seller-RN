@@ -88,7 +88,6 @@ const ImagePickerModal = ({modalVisible, setModalVisible, setImage}) => {
 
   const openCamera = () => {
     ImagePicker.launchCamera(options, (response) => {
-      console.log('response', response);
       if (!response.didCancel && !response.errorMessage) {
         if (
           response.type === 'image/jpg' ||
@@ -98,7 +97,6 @@ const ImagePickerModal = ({modalVisible, setModalVisible, setImage}) => {
           setModalVisible(false);
           setImage(response.base64);
         } else {
-          console.log('here ehhas');
           setModalVisible(false);
           showFlashMessage('Unsupported File Type!', 'danger');
         }

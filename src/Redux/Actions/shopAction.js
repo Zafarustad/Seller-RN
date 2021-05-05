@@ -54,7 +54,6 @@ export const addShopDetailDispatch = (data) => async (dispatch) => {
     showFlashMessage('Shop Data Added!', 'success');
     dispatch(authLoadingAction(false));
   } catch (e) {
-    console.log(e.response.data);
     dispatch(authLoadingAction(false));
     showFlashMessage('Something went wrong', 'danger');
   }
@@ -69,7 +68,6 @@ export const addShopCoordinateDispatch = (data) => async (dispatch) => {
     showFlashMessage('Shop Coordinateds Added!', 'success');
     dispatch(authLoadingAction(false));
   } catch (e) {
-    console.log(e.response.data);
     dispatch(authLoadingAction(false));
     showFlashMessage('Something went wrong', 'danger');
   }
@@ -81,7 +79,6 @@ export const getShopDataDispatch = (shopId) => async (dispatch) => {
     storeData('shopData', res.data);
     dispatch(setShopDataAction(res.data));
   } catch (e) {
-    console.log(e.response.data);
     showFlashMessage('Something went wrong', 'danger');
   }
 };
@@ -93,7 +90,6 @@ export const addProductToInventoryDispatch = (data) => async (dispatch) => {
     dispatch(authLoadingAction(false));
     showFlashMessage('Product added!', 'success');
   } catch (e) {
-    console.log(e.response.data);
     dispatch(authLoadingAction(false));
     showFlashMessage('Something went wrong', 'danger');
   }
@@ -105,7 +101,6 @@ export const getShopInventoryDispatch = (shopId) => async (dispatch) => {
     dispatch(getShopInventoryAction(res.data));
     dispatch(toggleLoadingAction(false));
   } catch (e) {
-    console.log(e.response.data);
     dispatch(toggleLoadingAction(false));
     showFlashMessage('Something went wrong', 'danger');
   }
@@ -121,7 +116,6 @@ export const deleteInventoryProductDispatch = (shopId, productId) => async (
     dispatch(deleteInventoryProductAction(productId));
     dispatch(toggleLoadingAction(false));
   } catch (e) {
-    console.log(e.response.data);
     dispatch(toggleLoadingAction(false));
     showFlashMessage('Something went wrong', 'danger');
   }
@@ -135,7 +129,6 @@ export const updateShopDataDispatch = (data) => async (dispatch) => {
     showFlashMessage('Shop Data Updated!', 'success');
     dispatch(authLoadingAction(false));
   } catch (e) {
-    console.log('error1', e.response.data);
     dispatch(authLoadingAction(false));
     showFlashMessage('Something went wrong', 'danger');
   }
@@ -150,6 +143,7 @@ export const updateShopImageDispatch = (data) => async (dispatch) => {
     dispatch(authLoadingAction(false));
   } catch (e) {
     dispatch(authLoadingAction(false));
+    console.log(e.response.data);
     showFlashMessage('Something went wrong', 'danger');
   }
 };

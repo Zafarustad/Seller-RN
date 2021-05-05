@@ -45,8 +45,6 @@ const MyShop = ({
   const {shopData} = shop;
   const {authLoading} = auth;
 
-  // console.log('shopData', shopData)
-
   const logout = async () => {
     isAuthenticatedAction(false);
     await SInfo.deleteItem('token', {
@@ -106,7 +104,6 @@ const MyShop = ({
           <Text style={styles.text}>Address: {shopData.address}</Text>
           <Text style={styles.text}>City: {shopData.city}</Text>
           <Text style={styles.text}>Pin Code: {shopData.pincode}</Text>
-          <Text style={styles.text}>GSTIN: {shopData.gstin}</Text>
           {shopData.upiId ? (
             <Text style={styles.text}>UPI: {shopData.upiId}</Text>
           ) : (
@@ -276,7 +273,7 @@ const styles = StyleSheet.create({
   bottomCont: {
     backgroundColor: '#FFF',
     width: width,
-    height: height * 0.25,
+    height: height * 0.2,
     marginTop: 20,
     elevation: 10,
     borderBottomWidth: 0.4,
