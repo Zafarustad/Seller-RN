@@ -16,6 +16,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {bindActionCreators} from 'redux';
 import {showFlashMessage} from '../../../utils/utils';
 import Loader from '../../Custom/Loader';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
 const {width, height} = Dimensions.get('window');
 
@@ -27,8 +28,8 @@ const AddProduct = ({
   authLoadingAction,
 }) => {
   const [productName, setProductName] = useState('');
-  const [stockQuantity, setStockQuantity] = useState('');
   const [price, setPrice] = useState('');
+  const [inStock, setInStock] = useState(false);
 
   const {
     shopData: {_id},
@@ -38,35 +39,20 @@ const AddProduct = ({
 
   const makeStateEmpty = () => {
     setProductName('');
-    setStockQuantity('');
     setPrice('');
+    setInStock(false);
   };
 
   const onSubmit = () => {
-    if (
-      productName.length === 0 ||
-      stockQuantity.length === 0 ||
-      stockQuantity === 0 ||
-      price.length === 0
-    ) {
-      showFlashMessage('Fields are empty', 'danger');
+    if (productName.length === 0 || price.length === 0) {
+      showFlashMessage('Required fields are empty', 'danger');
     } else if (productName.length < 5) {
       showFlashMessage('Product name is small', 'danger');
     } else {
-      let data = {shopId: _id, productName, stockQuantity, price};
+      let data = {shopId: _id, productName, price, inStock};
       authLoadingAction(true);
       addProductToInventoryDispatch(data);
       makeStateEmpty();
-    }
-  };
-
-  const changeInput = (text) => {
-    const numberRegex = /^[0-9\b]+$/;
-    if (numberRegex.test(text)) {
-      setStockQuantity(parseInt(text));
-    }
-    if (text === '') {
-      setStockQuantity('');
     }
   };
 
@@ -87,48 +73,26 @@ const AddProduct = ({
         value={productName}
         style={{width: width * 0.8}}
         onChangeText={(text) => setProductName(text)}
-        placeholder="Enter Product Name"
+        placeholder="Enter Product Name*"
       />
-      <View style={styles.stockInputCont}>
-        <MyTextInput
-          value={stockQuantity.toString()}
-          style={{width: width * 0.68}}
-          onChangeText={(text) => changeInput(text)}
-          placeholder="Enter Stock Quantity"
-          keyboardType="number-pad"
-          maxLength={4}
-        />
-        <View style={styles.arrowCont}>
-          <TouchableOpacity
-            onPress={() => {
-              if (stockQuantity === '') {
-                setStockQuantity(parseInt('0'));
-              } else setStockQuantity(stockQuantity + 1);
-            }}
-            activeOpacity={0.7}
-            style={styles.upBtn}>
-            <AntDesign name="caretup" size={12} color="#FFFFFF" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              if (stockQuantity === 0) {
-                setStockQuantity(0);
-              } else {
-                setStockQuantity(stockQuantity - 1);
-              }
-            }}
-            activeOpacity={0.7}
-            style={styles.downBtn}>
-            <AntDesign name="caretdown" size={12} color="#FFFFFF" />
-          </TouchableOpacity>
-        </View>
-      </View>
       <MyTextInput
         value={price}
         style={{width: width * 0.8}}
         onChangeText={(text) => setPrice(text)}
-        placeholder="Enter Product Price"
+        placeholder="Enter Product Price*"
+        keyboardType="number-pad"
       />
+      <TouchableOpacity
+        style={styles.stockInputCont}
+        activeOpacity={0.7}
+        onPress={() => setInStock(!inStock)}>
+        {!inStock ? (
+          <Ionicon name="checkbox-outline" color="#AAA" size={25} />
+        ) : (
+          <Ionicon name="checkbox" color="#000000" size={25} />
+        )}
+        <Text style={{fontSize: 20, marginLeft: 10}}>In Stock</Text>
+      </TouchableOpacity>
       <TouchableOpacity
         onPress={() => onSubmit()}
         activeOpacity={0.75}
@@ -163,6 +127,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,
+    alignSelf: 'flex-start',
+    marginLeft: 45,
   },
   arrowCont: {
     flexDirection: 'column',

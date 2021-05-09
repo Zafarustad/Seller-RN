@@ -5,6 +5,7 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
+  Vibration
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -14,6 +15,7 @@ import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import {utilStyles} from '../../../utils/styles';
 import Loader from '../../Custom/Loader';
+import {showFlashMessage} from '../../../utils/utils';
 
 const {width, height} = Dimensions.get('window');
 
@@ -31,14 +33,18 @@ const GoogleMap = ({
   const {shopData} = shop;
 
   const onSubmit = () => {
-    let data = {
-      shopOwnerId: userData._id,
-      shopId: shopData._id,
-      latititude: lat,
-      longitude: lng,
-    };
-    authLoadingAction(true);
-    addShopCoordinateDispatch(data);
+    if (!lat || !lng) {
+      showFlashMessage('Please select shop location', 'danger');
+    } else {
+      let data = {
+        shopOwnerId: userData._id,
+        shopId: shopData._id,
+        latititude: lat,
+        longitude: lng,
+      };
+      authLoadingAction(true);
+      addShopCoordinateDispatch(data);
+    }
   };
 
   return (
@@ -76,6 +82,7 @@ const GoogleMap = ({
               <Marker
                 draggable={true}
                 coordinate={{latitude: lat, longitude: lng}}
+                onDragStart={() => Vibration.vibrate(100)}
                 onDragEnd={(e) => {
                   setLat(e.nativeEvent.coordinate.latitude);
                   setLng(e.nativeEvent.coordinate.longitude);
@@ -109,6 +116,11 @@ const GoogleMap = ({
               language: 'en',
             }}
           />
+          {lat && lng && (
+            <Text style={{position: 'absolute', top: 70, color: '#AAA'}}>
+              Long press to drag and drop marker
+            </Text>
+          )}
           {!authLoading ? (
             <TouchableOpacity
               activeOpacity={0.7}

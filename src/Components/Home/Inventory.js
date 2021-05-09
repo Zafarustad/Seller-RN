@@ -92,12 +92,6 @@ const Inventory = ({
           <Text style={styles.rowText2}>&#8377; {item.price}/-</Text>
         </View>
       </View>
-      <View style={{marginLeft: 30}}>
-        <Text style={[styles.rowText1, {marginRight: 60}]}>Stock Quantity</Text>
-        <Text style={[styles.rowText2, {marginRight: 60}]}>
-          {item.stockQuantity}
-        </Text>
-      </View>
       <View style={styles.switchWrapper}>
         <Text style={styles.swicthText}>In Stock</Text>
         <View>
@@ -231,7 +225,7 @@ const styles = StyleSheet.create({
   },
   itemCont: {
     width: width * 0.9,
-    height: 190,
+    height: 150,
     elevation: 6,
     borderRadius: 10,
     backgroundColor: '#fff',
