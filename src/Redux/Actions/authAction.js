@@ -42,7 +42,7 @@ export const userLoginDispatch = (data) => async (dispatch) => {
     dispatch(isAuthenticatedAction(true));
     dispatch(authLoadingAction(false));
   } catch (e) {
-    // console.log('error:', e.response.data);
+    console.log('error:', e.response.data);
     dispatch(authLoadingAction(false));
     showFlashMessage('Server Error', 'danger');
   }
@@ -59,7 +59,7 @@ export const userRegisterDispatch = (data) => async (dispatch) => {
     dispatch(isAuthenticatedAction(true));
     dispatch(authLoadingAction(false));
   } catch (e) {
-    // console.log('error:', e.response.data);
+    console.log('error:', e.response.data);
     dispatch(authLoadingAction(false));
     showFlashMessage(e.response.data.error, 'danger');
   }

@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   ActivityIndicator,
+  Linking,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -23,6 +24,7 @@ import {MyTextInput} from '../../utils/myElements';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {showFlashMessage} from '../../utils/utils';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
 const {height, width} = Dimensions.get('screen');
 
@@ -36,6 +38,7 @@ const Register = ({
   const [password, setPassword] = useState('');
   const [shopOwnerName, setOwnerName] = useState('');
   const [number, setNumber] = useState('');
+  const [termsPolicy, setTermsPolicy] = useState(false);
 
   const {errors, authLoading} = auth;
 
@@ -128,11 +131,61 @@ const Register = ({
                 placeholder="Enter your mobile number"
                 error={errors && errors.number ? errors.number : null}
               />
+              <View style={styles.privacyCont} activeOpacity={0.7}>
+                {!termsPolicy ? (
+                  <Ionicon
+                    onPress={() => setTermsPolicy(!termsPolicy)}
+                    name="checkbox-outline"
+                    color="#AAA"
+                    size={25}
+                  />
+                ) : (
+                  <Ionicon
+                    onPress={() => setTermsPolicy(!termsPolicy)}
+                    name="checkbox"
+                    color="#000000"
+                    size={25}
+                  />
+                )}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginLeft: 5,
+                  }}>
+                  <Text style={{fontSize: 13}}>I agree to the </Text>
+                  <Text
+                    onPress={() =>
+                      Linking.openURL(
+                        'https://locallyapp.netlify.app/#/terms',
+                      )
+                    }
+                    style={{fontSize: 13, fontWeight: 'bold'}}>
+                    Terms & Conditions{' '}
+                  </Text>
+                  <Text style={{fontSize: 13}}>and </Text>
+                  <Text
+                    onPress={() =>
+                      Linking.openURL(
+                        'https://locallyapp.netlify.app/#/privacy-policy',
+                      )
+                    }
+                    style={{fontSize: 13, fontWeight: 'bold'}}>
+                    Privacy Policy
+                  </Text>
+                </View>
+              </View>
               {!authLoading ? (
                 <TouchableOpacity
-                  onPress={() => onSubmit()}
+                  onPress={() => (termsPolicy ? onSubmit() : null)}
                   activeOpacity={0.75}
-                  style={utilStyles.button1}>
+                  style={[
+                    utilStyles.button1,
+                    {
+                      backgroundColor: termsPolicy ? '#08121C' : '#AAAAAA',
+                      elevation: termsPolicy ? 7 : 0,
+                    },
+                  ]}>
                   <Text style={{fontSize: 17, color: '#FFF'}}>Submit</Text>
                 </TouchableOpacity>
               ) : (
@@ -196,5 +249,10 @@ const styles = StyleSheet.create({
     marginRight: 15,
     alignSelf: 'flex-end',
     marginTop: 20,
+  },
+  privacyCont: {
+    flexDirection: 'row',
+    marginVertical: 10,
+    justifyContent: 'center',
   },
 });
